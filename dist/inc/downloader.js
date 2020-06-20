@@ -75,3 +75,12 @@ export const downloadProfileImage = async (user, targetName) => {
 		await download(mediaUrl, { file, dir });
 
 };
+
+// 
+// 
+// 
+export const readLocalJsonp = async (targetName, path) => {
+	const dir = '../downloads/' + targetName + '/jsonp/' + path;
+	await import(dir);
+	return globalThis.data;
+};
