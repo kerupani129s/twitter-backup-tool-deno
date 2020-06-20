@@ -57,7 +57,7 @@ console.log('Total Count of Tweets: ' + localTweets.length + ' + ' + addedTweets
 // 
 await initDownloadsDirectory(targetName);
 
-const jsonp = 'globalThis.data = globalThis.data || {};\n\nglobalThis.data.tweets = ' + JSON.stringify(mergedTweets, null, 4) + ';';
+const jsonp = 'window.data = window.data || {};\n\nwindow.data.tweets = ' + JSON.stringify(mergedTweets, null, 4) + ';';
 await downloadJsonp(targetName, 'favorites.js', jsonp);
 
 // ツイート追加分のみメディアをダウンロード

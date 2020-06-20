@@ -82,5 +82,5 @@ export const downloadProfileImage = async (user, targetName) => {
 export const readLocalJsonp = async (targetName, path) => {
 	const dir = '../downloads/' + targetName + '/jsonp/' + path;
 	await import(dir);
-	return globalThis.data;
+	return window.data;
 };

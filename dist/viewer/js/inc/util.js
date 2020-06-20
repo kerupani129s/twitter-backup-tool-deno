@@ -1,8 +1,8 @@
 (() => {
 
-	globalThis.viewer = globalThis.viewer || {};
+	window.viewer = window.viewer || {};
 
-	const viewer = globalThis.viewer;
+	const viewer = window.viewer;
 
 	/**
 	 * 文字列に含まれるエンティティ (URL・ユーザー・ハッシュタグ・キャッシュタグ) をリンクに置換
