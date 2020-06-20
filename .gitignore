@@ -1,0 +1,2 @@
+/dist/downloads/*
+!/dist/downloads/config.dummy.json
