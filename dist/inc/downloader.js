@@ -80,7 +80,14 @@ export const downloadProfileImage = async (user, targetName) => {
 // 
 // 
 export const readLocalJsonp = async (targetName, path) => {
-	const dir = '../downloads/' + targetName + '/jsonp/' + path;
-	await import(dir);
-	return window.data;
+
+	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+
+	if ( await exists(pathWithDir) ) {
+		await import(Deno.cwd() + '/' + pathWithDir);
+		return window.data;
+	} else {
+		return;
+	}
+
 };
