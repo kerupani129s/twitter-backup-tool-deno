@@ -56,14 +56,32 @@ API 用のキー 2 つとユーザー用のトークン 2 つを、本ツール�
 
 ### 2.3. deno で js を実行
 
-`dist/` ディレクトリ内で `./deno-run.sh <js> [<引数>]` を実行します。
+`dist/` ディレクトリ内で `./deno-run.sh <js> <ログイン> [<引数>]` を実行します。
 
-ツイッターの情報と、画像・動画ファイルがダウンロードされます、
+ツイッターの情報と、画像・動画ファイルが `dist/downloads/<ログイン>/` ディレクトリにダウンロードされます、
 
 例：
 
 ```
 ./deno-run.sh favorites.js username username
+```
+
+### 2.4. WEB ブラウザで閲覧
+
+専用の html ファイルを開くと保存したツイートが表示されます。
+
+動作環境：
+
+- Chrome
+- Firefox
+- Edge
+
+※ IE では表示できません。
+
+例：
+
+```
+dist/downloads/username/favorites.html
 ```
 
 ## 3. 注意事項
