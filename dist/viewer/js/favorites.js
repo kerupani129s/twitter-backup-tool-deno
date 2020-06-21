@@ -1,7 +1,7 @@
 (() => {
 
-	const tweets = globalThis.data.tweets;
-	const viewer = globalThis.viewer;
+	const tweets = window.data.tweets;
+	const viewer = window.viewer;
 
 	// 
 	const contents = document.getElementById('contents');

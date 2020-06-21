@@ -1,8 +1,8 @@
 (() => {
 
-	globalThis.viewer = globalThis.viewer || {};
+	window.viewer = window.viewer || {};
 
-	const viewer = globalThis.viewer;
+	const viewer = window.viewer;
 
 	viewer.getTweetMediaHTML = tweet => {
 

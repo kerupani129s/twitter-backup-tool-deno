@@ -34,9 +34,14 @@ export const downloadTweetMedia = async (tweet, targetName) => {
 	if ( 'media' in tweet['entities'] ) {
 		// メモ: await を使用して直列実行したいため、forEach を使わない
 		for (const media of tweet['extended_entities']['media']) {
+
 			const mediaUrl = getMediaUrl(media);
+			const file = viewer.getLocalBaseNameOf(mediaUrl);
 			const dir = './downloads/' + targetName + '/media/';
-			await download(mediaUrl, { file: viewer.getLocalBaseNameOf(mediaUrl), dir });
+
+			if ( ! await exists(dir + file) )
+				await download(mediaUrl, { file, dir });
+
 		}
 	}
 
@@ -60,7 +65,29 @@ const getMediaUrl = media => {
 // 
 // 
 export const downloadProfileImage = async (user, targetName) => {
+
 	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
+
+	const file = viewer.getLocalBaseNameOf(mediaUrl);
 	const dir = './downloads/' + targetName + '/profile_image/';
-	await download(mediaUrl, { file: viewer.getLocalBaseNameOf(mediaUrl), dir });
+
+	if ( ! await exists(dir + file) )
+		await download(mediaUrl, { file, dir });
+
+};
+
+// 
+// 
+// 
+export const readLocalJsonp = async (targetName, path) => {
+
+	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+
+	if ( await exists(pathWithDir) ) {
+		await import(Deno.cwd() + '/' + pathWithDir);
+		return window.data;
+	} else {
+		return;
+	}
+
 };
