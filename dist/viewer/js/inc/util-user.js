@@ -19,14 +19,9 @@
 			(user['protected'] ? ' <span style="filter: grayscale(100%); background-color: #000;">&#x1f512;</span>' : '') +
 			'<br>' +
 			'<a href="https://twitter.com/' + user['screen_name'] + '">@' + user['screen_name'] + '</a><br>' +
-			nl2br(description) + '<br>' +
+			viewer.nl2br(description) + '<br>' +
 			urlLink;
 
 	};
-
-	// 
-	// その他
-	// 
-	const nl2br = str => str.replace(/\r\n/g, '<br>').replace(/\n|\r/g, '<br>');
 
 })();

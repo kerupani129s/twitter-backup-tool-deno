@@ -46,7 +46,7 @@
 
 		const fullText = viewer.replaceEntitiesToLinks(tweet['full_text'], tweet['entities'], tweet['display_text_range']);
 
-		return nl2br(fullText);
+		return viewer.nl2br(fullText);
 
 	};
 
@@ -83,10 +83,5 @@
 		return 'Replying to ' + userLinks.join(' ') + '<br>';
 
 	};
-
-	// 
-	// その他
-	// 
-	const nl2br = str => str.replace(/\r\n/g, '<br>').replace(/\n|\r/g, '<br>');
 
 })();
