@@ -1,6 +1,6 @@
 (() => {
 
-	const tweets = window.data.tweets;
+	const tweets = window.data.favorites;
 	const viewer = window.viewer;
 
 	// 
