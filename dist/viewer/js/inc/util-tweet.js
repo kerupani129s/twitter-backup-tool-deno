@@ -35,7 +35,7 @@
 			(user['verified'] ? ' <span style="color: #fff; background-color: #08f;">&#x2714;</span>' : '') +
 			(user['protected'] ? ' <span style="filter: grayscale(100%); background-color: #000;">&#x1f512;</span>' : '') +
 			'<br>' +
-			'<a href="https://twitter.com/' + user['screen_name'] + '">@' + user['screen_name'] + '</a><br>'
+			'<a href="https://twitter.com/' + user['screen_name'] + '">@' + user['screen_name'] + '</a><br>';
 
 	};
 

@@ -7,7 +7,7 @@
 	viewer.getTweetMediaHTML = tweet => {
 
 		if ( 'media' in tweet['entities'] ) {
-			return tweet['extended_entities']['media'].map(media => '(' + media['type'] + ')<br>' + getMediaTag(media) + '<br>').join('')
+			return tweet['extended_entities']['media'].map(media => '(' + media['type'] + ')<br>' + getMediaTag(media) + '<br>').join('');
 		} else {
 			return '';
 		}
