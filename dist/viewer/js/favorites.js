@@ -20,24 +20,31 @@
 	});
 
 	// 
-	let i = 0;
-
 	const loadContent = () => {
 
-		const tweet = tweets[i];
+		const nextContent = contentsIterable.next();
 
-		contents.insertAdjacentHTML('beforeend',
-				'<article>' +
-				viewer.getTweetHTML(tweet) +
-				viewer.getTweetMediaHTML(tweet) +
-				'<br></article>');
-
-		// 
-		i++;
-
-		if ( i < tweets.length ) infiniteScrollObserver.observe(contents.lastElementChild);
+		if ( ! nextContent.done )
+			infiniteScrollObserver.observe(nextContent.value);
 
 	};
+
+	const contentsIterable = (function*() {
+
+		// メモ: yield を使用したいため、forEach を使わない
+		for (const tweet of tweets) {
+
+			contents.insertAdjacentHTML('beforeend',
+					'<article>' +
+					viewer.getTweetHTML(tweet) +
+					viewer.getTweetMediaHTML(tweet) +
+					'<br></article>');
+
+			yield contents.lastElementChild;
+
+		};
+
+	})();
 
 	// 
 	loadContent();

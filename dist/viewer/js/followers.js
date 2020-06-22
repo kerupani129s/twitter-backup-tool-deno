@@ -21,23 +21,30 @@
 	});
 
 	// 
-	let i = 0;
-
 	const loadContent = () => {
 
-		const user = users[i];
+		const nextContent = contentsIterable.next();
 
-		contents.insertAdjacentHTML('beforeend',
-				'<article>' +
-				viewer.getUserHTML(user) +
-				'<br></article>');
-
-		// 
-		i++;
-
-		if ( i < users.length ) infiniteScrollObserver.observe(contents.lastElementChild);
+		if ( ! nextContent.done )
+			infiniteScrollObserver.observe(nextContent.value);
 
 	};
+
+	const contentsIterable = (function*() {
+
+		// メモ: yield を使用したいため、forEach を使わない
+		for (const user of users) {
+
+			contents.insertAdjacentHTML('beforeend',
+					'<article>' +
+					viewer.getUserHTML(user) +
+					'<br></article>');
+
+			yield contents.lastElementChild;
+
+		};
+
+	})();
 
 	// 
 	loadContent();
