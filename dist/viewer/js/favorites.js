@@ -6,8 +6,6 @@
 	// 
 	const contents = document.getElementById('contents');
 
-	contents.insertAdjacentHTML('beforeend', '<div>Total Count: ' + tweets.length + '</div><br>');
-
 	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {
 		entries.forEach(entry => {
@@ -30,6 +28,11 @@
 	};
 
 	const contentsIterable = (function*() {
+
+		// 
+		contents.insertAdjacentHTML('beforeend', '<header>Total Count: ' + tweets.length + '<br><br></header>');
+
+		yield contents.lastElementChild;
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const tweet of tweets) {
