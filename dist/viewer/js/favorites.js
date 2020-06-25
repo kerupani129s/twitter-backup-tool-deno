@@ -4,9 +4,6 @@
 	const viewer = window.viewer;
 
 	// 
-	const contents = document.getElementById('contents');
-
-	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {
 		entries.forEach(entry => {
 			if ( ! entry.isIntersecting ) return;
@@ -17,7 +14,6 @@
 		});
 	});
 
-	// 
 	const loadContent = () => {
 
 		const nextContent = contentsIterable.next();
@@ -29,25 +25,42 @@
 
 	const contentsIterable = (function*() {
 
-		// 
-		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Total Count: ' + tweets.length + '</header>');
+		const contents = document.getElementById('contents');
 
-		yield contents.lastElementChild;
+		// 
+		yield renderTweetsHeader(contents, 'Favorites', tweets);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const tweet of tweets) {
-
-			contents.insertAdjacentHTML('beforeend',
-					'<article class="content tweet">' +
-					viewer.getTweetHTML(tweet) +
-					viewer.getTweetMediaHTML(tweet) +
-					'</article>');
-
-			yield contents.lastElementChild;
-
+			yield renderTweet(contents, tweet);
 		};
 
 	})();
+
+	// 
+	const renderTweetsHeader = (contents, name, tweets) => {
+
+		contents.insertAdjacentHTML('beforeend',
+				'<header class="content content-header">' +
+				name + '<br>' +
+				'Total Count: ' + tweets.length +
+				'</header>');
+
+		return contents.lastElementChild;
+
+	};
+
+	const renderTweet = (contents, tweet) => {
+
+		contents.insertAdjacentHTML('beforeend',
+				'<article class="content tweet">' +
+				viewer.getTweetHTML(tweet) +
+				viewer.getTweetMediaHTML(tweet) +
+				'</article>');
+
+		return contents.lastElementChild;
+
+	};
 
 	// 
 	loadContent();

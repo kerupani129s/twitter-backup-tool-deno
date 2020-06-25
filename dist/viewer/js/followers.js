@@ -5,9 +5,6 @@
 	const viewer = window.viewer;
 
 	// 
-	const contents = document.getElementById('contents');
-
-	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {
 		entries.forEach(entry => {
 			if ( ! entry.isIntersecting ) return;
@@ -18,7 +15,6 @@
 		});
 	});
 
-	// 
 	const loadContent = () => {
 
 		const nextContent = contentsIterable.next();
@@ -30,41 +26,49 @@
 
 	const contentsIterable = (function*() {
 
-		// 
-		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Followers<br>Total Count: ' + users.length + '</header>');
+		const contents = document.getElementById('contents');
 
-		yield contents.lastElementChild;
+		// 
+		yield renderUsersHeader(contents, 'Followers', users);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const user of users) {
-
-			contents.insertAdjacentHTML('beforeend',
-					'<article class="content user">' +
-					viewer.getUserHTML(user) +
-					'</article>');
-
-			yield contents.lastElementChild;
-
+			yield renderUser(contents, user);
 		};
 
 		// 
-		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Removed Followers<br>Total Count: ' + removedUsers.length + '</header>');
-
-		yield contents.lastElementChild;
+		yield renderUsersHeader(contents, 'Removed Followers', removedUsers);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const user of removedUsers) {
-
-			contents.insertAdjacentHTML('beforeend',
-					'<article class="content user">' +
-					viewer.getUserHTML(user) +
-					'</article>');
-
-			yield contents.lastElementChild;
-
+			yield renderUser(contents, user);
 		};
 
 	})();
+
+	// 
+	const renderUsersHeader = (contents, name, users) => {
+
+		contents.insertAdjacentHTML('beforeend',
+				'<header class="content content-header">' +
+				name + '<br>' +
+				'Total Count: ' + users.length +
+				'</header>');
+
+		return contents.lastElementChild;
+
+	};
+
+	const renderUser = (contents, user) => {
+
+		contents.insertAdjacentHTML('beforeend',
+				'<article class="content user">' +
+				viewer.getUserHTML(user) +
+				'</article>');
+
+		return contents.lastElementChild;
+
+	};
 
 	// 
 	loadContent();
