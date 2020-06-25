@@ -31,12 +31,29 @@
 	const contentsIterable = (function*() {
 
 		// 
-		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Total Count: ' + users.length + '</header>');
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Followers<br>Total Count: ' + users.length + '</header>');
 
 		yield contents.lastElementChild;
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const user of users) {
+
+			contents.insertAdjacentHTML('beforeend',
+					'<article class="content user">' +
+					viewer.getUserHTML(user) +
+					'</article>');
+
+			yield contents.lastElementChild;
+
+		};
+
+		// 
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Removed Followers<br>Total Count: ' + removedUsers.length + '</header>');
+
+		yield contents.lastElementChild;
+
+		// メモ: yield を使用したいため、forEach を使わない
+		for (const user of removedUsers) {
 
 			contents.insertAdjacentHTML('beforeend',
 					'<article class="content user">' +
