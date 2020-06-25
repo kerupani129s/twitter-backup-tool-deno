@@ -27,7 +27,7 @@
 			const mediaUrl = viewer.getVideoUrlLargeMp4(media);
 			const localPath = viewer.getLocalBaseNameOf(mediaUrl);
 			// メモ: localPath は % エンコードされているが、HTML として埋め込むにはさらに % エンコードが必要
-			return '<video class="tweet__media" controls preload="metadata" src="./media/' + viewer.percentEncode(localPath) + '"></video>';
+			return '<video class="tweet__media" controls loop preload="metadata" src="./media/' + viewer.percentEncode(localPath) + '"></video>';
 		}
 
 		return '';
