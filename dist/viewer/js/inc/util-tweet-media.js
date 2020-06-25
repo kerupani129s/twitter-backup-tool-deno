@@ -22,12 +22,12 @@
 			const mediaUrl = viewer.getImageUrlLarge(media['media_url_https']);
 			const localPath = viewer.getLocalBaseNameOf(mediaUrl);
 			// メモ: localPath は % エンコードされているが、HTML として埋め込むにはさらに % エンコードが必要
-			return '<img style="max-width: 360px;" src="./media/' + viewer.percentEncode(localPath) + '">';
+			return '<img class="tweet__media" src="./media/' + viewer.percentEncode(localPath) + '">';
 		} else if ( type === 'video' || type === 'animated_gif' ) {
 			const mediaUrl = viewer.getVideoUrlLargeMp4(media);
 			const localPath = viewer.getLocalBaseNameOf(mediaUrl);
 			// メモ: localPath は % エンコードされているが、HTML として埋め込むにはさらに % エンコードが必要
-			return '<video style="max-width: 360px;" controls preload="metadata" src="./media/' + viewer.percentEncode(localPath) + '"></video>';
+			return '<video class="tweet__media" controls preload="metadata" src="./media/' + viewer.percentEncode(localPath) + '"></video>';
 		}
 
 		return '';

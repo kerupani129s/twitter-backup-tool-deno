@@ -30,7 +30,7 @@
 
 		const profileImageUrlOriginal = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
 
-		return '<img src="./profile_image/' + viewer.getLocalBaseNameOf(profileImageUrlOriginal) + '" style="width: 48px;"><br>' +
+		return '<img class="profile-image" src="./profile_image/' + viewer.getLocalBaseNameOf(profileImageUrlOriginal) + '"><br>' +
 			user['name'] +
 			(user['verified'] ? ' <span style="color: #fff; background-color: #08f;">&#x2714;</span>' : '') +
 			(user['protected'] ? ' <span style="filter: grayscale(100%); background-color: #000;">&#x1f512;</span>' : '') +

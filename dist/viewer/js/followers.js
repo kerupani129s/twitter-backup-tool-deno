@@ -31,7 +31,7 @@
 	const contentsIterable = (function*() {
 
 		// 
-		contents.insertAdjacentHTML('beforeend', '<header>Total Count: ' + users.length + '<br><br></header>');
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Total Count: ' + users.length + '</header>');
 
 		yield contents.lastElementChild;
 
@@ -39,9 +39,9 @@
 		for (const user of users) {
 
 			contents.insertAdjacentHTML('beforeend',
-					'<article>' +
+					'<article class="content user">' +
 					viewer.getUserHTML(user) +
-					'<br></article>');
+					'</article>');
 
 			yield contents.lastElementChild;
 

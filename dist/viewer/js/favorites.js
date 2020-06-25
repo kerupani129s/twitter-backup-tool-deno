@@ -30,7 +30,7 @@
 	const contentsIterable = (function*() {
 
 		// 
-		contents.insertAdjacentHTML('beforeend', '<header>Total Count: ' + tweets.length + '<br><br></header>');
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Total Count: ' + tweets.length + '</header>');
 
 		yield contents.lastElementChild;
 
@@ -38,10 +38,10 @@
 		for (const tweet of tweets) {
 
 			contents.insertAdjacentHTML('beforeend',
-					'<article>' +
+					'<article class="content tweet">' +
 					viewer.getTweetHTML(tweet) +
 					viewer.getTweetMediaHTML(tweet) +
-					'<br></article>');
+					'</article>');
 
 			yield contents.lastElementChild;
 

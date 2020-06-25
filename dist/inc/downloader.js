@@ -12,8 +12,9 @@ export const initDownloadsDirectory = async targetName => {
 	// メモ: ビューワを更新した際も反映させたいため、上書きコピー
 	// メモ: まとめてコピーしても同じことができるが、ユーザーやデベロッパーの人為的ミスによる、
 	//       既存の他ディレクトリの破壊リスクを小さくするため、子ディレクトリごとにコピーする
-	await copy('./viewer/js/', './downloads/' + targetName + '/js/', { overwrite: true });
+	await copy('./viewer/css/', './downloads/' + targetName + '/css/', { overwrite: true });
 	await copy('./viewer/html/', './downloads/' + targetName + '/', { overwrite: true });
+	await copy('./viewer/js/', './downloads/' + targetName + '/js/', { overwrite: true });
 
 	await Deno.mkdir('./downloads/' + targetName + '/jsonp/', { recursive: true });
 	await Deno.mkdir('./downloads/' + targetName + '/profile_image/', { recursive: true });

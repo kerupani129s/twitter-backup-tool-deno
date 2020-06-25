@@ -1,0 +1,16 @@
+.content {
+	margin-bottom: 1.5em;
+}
+
+.content-header {
+	padding: 0.8em 1em;
+	outline: solid #888 3px;
+}
+
+.profile-image {
+	width: 48px;
+}
+
+.tweet__media {
+	max-width: 360px;
+}
