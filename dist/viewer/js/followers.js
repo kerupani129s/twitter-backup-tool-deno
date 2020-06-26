@@ -29,46 +29,22 @@
 		const contents = document.getElementById('contents');
 
 		// 
-		yield renderUsersHeader(contents, 'Followers', users);
+		yield viewer.renderUsersHeader(contents, 'Followers', users);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const user of users) {
-			yield renderUser(contents, user);
+			yield viewer.renderUser(contents, user);
 		};
 
 		// 
-		yield renderUsersHeader(contents, 'Removed Followers', removedUsers);
+		yield viewer.renderUsersHeader(contents, 'Removed Followers', removedUsers);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const user of removedUsers) {
-			yield renderUser(contents, user);
+			yield viewer.renderUser(contents, user);
 		};
 
 	})();
-
-	// 
-	const renderUsersHeader = (contents, name, users) => {
-
-		contents.insertAdjacentHTML('beforeend',
-				'<header class="content content-header">' +
-				name + '<br>' +
-				'Total Count: ' + users.length +
-				'</header>');
-
-		return contents.lastElementChild;
-
-	};
-
-	const renderUser = (contents, user) => {
-
-		contents.insertAdjacentHTML('beforeend',
-				'<article class="content user">' +
-				viewer.getUserHTML(user) +
-				'</article>');
-
-		return contents.lastElementChild;
-
-	};
 
 	// 
 	loadContent();
