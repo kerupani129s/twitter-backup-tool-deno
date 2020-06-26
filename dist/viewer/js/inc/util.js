@@ -87,4 +87,9 @@
 
 	};
 
+	/**
+	 * 改行コードを <br> に変換
+	 */
+	viewer.nl2br = str => str.replace(/\r\n/g, '<br>').replace(/\n|\r/g, '<br>');
+
 })();

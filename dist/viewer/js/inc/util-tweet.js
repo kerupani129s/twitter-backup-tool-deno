@@ -30,12 +30,12 @@
 
 		const profileImageUrlOriginal = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
 
-		return '<img src="./profile_image/' + viewer.getLocalBaseNameOf(profileImageUrlOriginal) + '" style="width: 48px;"><br>' +
+		return '<img class="user-profile-image" src="./profile_image/' + viewer.getLocalBaseNameOf(profileImageUrlOriginal) + '"><br>' +
 			user['name'] +
-			(user['verified'] ? ' <span style="color: #fff; background-color: #08f;">&#x2714;</span>' : '') +
-			(user['protected'] ? ' <span style="filter: grayscale(100%); background-color: #000;">&#x1f512;</span>' : '') +
+			(user['verified'] ? '<span class="user-verified">&#x2714;</span>' : '') +
+			(user['protected'] ? '<span class="user-protected">&#x1f512;</span>' : '') +
 			'<br>' +
-			'<a href="https://twitter.com/' + user['screen_name'] + '">@' + user['screen_name'] + '</a><br>'
+			'<a href="https://twitter.com/' + user['screen_name'] + '">@' + user['screen_name'] + '</a><br>';
 
 	};
 
@@ -46,7 +46,7 @@
 
 		const fullText = viewer.replaceEntitiesToLinks(tweet['full_text'], tweet['entities'], tweet['display_text_range']);
 
-		return nl2br(fullText);
+		return viewer.nl2br(fullText);
 
 	};
 
@@ -83,10 +83,5 @@
 		return 'Replying to ' + userLinks.join(' ') + '<br>';
 
 	};
-
-	// 
-	// その他
-	// 
-	const nl2br = str => str.replace(/\r\n/g, '<br>').replace(/\n|\r/g, '<br>');
 
 })();

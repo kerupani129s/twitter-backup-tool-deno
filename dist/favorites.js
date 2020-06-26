@@ -41,7 +41,7 @@ while (true) {
 // メモ: 「いいね」はツイートの投稿日時順に取得されるため、過去のツイートが追加される可能性があるので、
 //       過去のツイートの追加・削除を全て確認する
 const data = await readLocalJsonp(targetName, 'favorites.js');
-const localTweets = (data ? data.tweets : []);
+const localTweets = (data ? data.favorites : []);
 
 const addedTweets   = tweets.filter(a => localTweets.every(b => a['id_str'] !== b['id_str']));
 const removedTweets = localTweets.filter(a => tweets.every(b => a['id_str'] !== b['id_str']));
@@ -57,7 +57,7 @@ console.log('Total Count of Tweets: ' + localTweets.length + ' + ' + addedTweets
 // 
 await initDownloadsDirectory(targetName);
 
-const jsonp = 'window.data = window.data || {};\n\nwindow.data.tweets = ' + JSON.stringify(mergedTweets, null, 4) + ';';
+const jsonp = 'window.data = window.data || {};\n\nwindow.data.favorites = ' + JSON.stringify(mergedTweets, null, 4) + ';\n';
 await downloadJsonp(targetName, 'favorites.js', jsonp);
 
 // ツイート追加分のみメディアをダウンロード

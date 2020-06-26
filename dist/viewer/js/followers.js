@@ -1,6 +1,7 @@
 (() => {
 
-	const tweets = window.data.favorites;
+	const users = window.data.followers;
+	const removedUsers = window.data.removedFollowers;
 	const viewer = window.viewer;
 
 	// 
@@ -28,34 +29,41 @@
 		const contents = document.getElementById('contents');
 
 		// 
-		yield renderTweetsHeader(contents, 'Favorites', tweets);
+		yield renderUsersHeader(contents, 'Followers', users);
 
 		// メモ: yield を使用したいため、forEach を使わない
-		for (const tweet of tweets) {
-			yield renderTweet(contents, tweet);
+		for (const user of users) {
+			yield renderUser(contents, user);
+		};
+
+		// 
+		yield renderUsersHeader(contents, 'Removed Followers', removedUsers);
+
+		// メモ: yield を使用したいため、forEach を使わない
+		for (const user of removedUsers) {
+			yield renderUser(contents, user);
 		};
 
 	})();
 
 	// 
-	const renderTweetsHeader = (contents, name, tweets) => {
+	const renderUsersHeader = (contents, name, users) => {
 
 		contents.insertAdjacentHTML('beforeend',
 				'<header class="content content-header">' +
 				name + '<br>' +
-				'Total Count: ' + tweets.length +
+				'Total Count: ' + users.length +
 				'</header>');
 
 		return contents.lastElementChild;
 
 	};
 
-	const renderTweet = (contents, tweet) => {
+	const renderUser = (contents, user) => {
 
 		contents.insertAdjacentHTML('beforeend',
-				'<article class="content tweet">' +
-				viewer.getTweetHTML(tweet) +
-				viewer.getTweetMediaHTML(tweet) +
+				'<article class="content user">' +
+				viewer.getUserHTML(user) +
 				'</article>');
 
 		return contents.lastElementChild;
