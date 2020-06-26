@@ -7,8 +7,26 @@
 	outline: solid #888 3px;
 }
 
-.profile-image {
+.user-profile-image {
 	width: 48px;
+}
+
+.user-verified {
+	display: inline-block;
+	margin-left: 0.5em;
+	width: 1.25em;
+	text-align: center;
+	color: #fff;
+	background-color: #08f;
+}
+
+.user-protected {
+	display: inline-block;
+	margin-left: 0.5em;
+	width: 1.25em;
+	text-align: center;
+	filter: grayscale(100%);
+	background-color: #000;
 }
 
 .tweet__media {
