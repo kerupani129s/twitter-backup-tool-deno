@@ -4,8 +4,6 @@ import { copy, exists } from 'https://deno.land/std/fs/mod.ts';
 import  '../viewer/js/inc/util-media.js';
 
 // 
-// 
-// 
 export const initDownloadsDirectory = async targetName => {
 
 	// メモ: Deno.copy() と異なる
@@ -22,13 +20,6 @@ export const initDownloadsDirectory = async targetName => {
 
 };
 
-export const downloadJsonp = (targetName, path, jsonp) => {
-	const dir = './downloads/' + targetName + '/jsonp/' + path;
-	return Deno.writeTextFile(dir, jsonp);
-};
-
-// 
-// 
 // 
 export const downloadTweetMedia = async (tweet, targetName) => {
 
@@ -63,8 +54,6 @@ const getMediaUrl = media => {
 };
 
 // 
-// 
-// 
 export const downloadProfileImage = async (user, targetName) => {
 
 	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
@@ -78,8 +67,6 @@ export const downloadProfileImage = async (user, targetName) => {
 };
 
 // 
-// 
-// 
 export const readLocalJsonp = async (targetName, path) => {
 
 	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
@@ -90,5 +77,17 @@ export const readLocalJsonp = async (targetName, path) => {
 	} else {
 		return;
 	}
+
+};
+
+export const writeLocalJsonp = async (targetName, path, obj) => {
+
+	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+
+	const jsonp = 'window.data = window.data || {};\n' +
+		Object.entries(obj).map(([key, value]) =>
+				'\nwindow.data[\'' + key + '\'] = ' + JSON.stringify(value, null, 4) + ';\n').join('');
+
+	return Deno.writeTextFile(pathWithDir, jsonp);
 
 };
