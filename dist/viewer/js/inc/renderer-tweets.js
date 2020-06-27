@@ -1,5 +1,7 @@
 (() => {
 
+	window.viewer = window.viewer || {};
+
 	const viewer = window.viewer;
 
 	// 
