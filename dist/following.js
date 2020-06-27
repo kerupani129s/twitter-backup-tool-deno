@@ -24,8 +24,6 @@ const getRemoteUsers = async () => {
 
 		const result = await twitter.get('friends/list', params);
 
-		if ( result.length === 0 ) break;
-
 		result['users'].forEach(user => {
 			users.push(user);
 		});
