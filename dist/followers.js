@@ -60,10 +60,14 @@ const downloadUserMedias = async users => {
 
 };
 
-// メモ: 一時的なアカウント削除などで一度削除されたユーザーが戻ることがあるため、
-//       削除済みユーザーも一度まとめる
+// 
+await initDownloadsDirectory(targetName);
+
+// 
 const users = await getRemoteUsers();
 
+// メモ: 一時的なアカウント削除などで一度削除されたユーザーが戻ることがあるため、
+//       削除済みユーザーも一度まとめる
 const data = await readLocalJsonp(targetName, 'followers.js');
 const localUsers = (data ? data.followers.concat(data.removedFollowers) : []);
 
@@ -71,8 +75,6 @@ const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['
 
 // 
 printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, removedUsers.length, users.length, users.length + removedUsers.length);
-
-await initDownloadsDirectory(targetName);
 
 await writeLocalJsonp(targetName, 'followers.js', { followers: users, removedFollowers: removedUsers });
 

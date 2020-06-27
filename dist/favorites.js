@@ -69,10 +69,14 @@ const downloadTweetMedias = async tweets => {
 
 };
 
-// メモ: 「いいね」はツイートの投稿日時順に取得されるため、過去のツイートが追加される可能性があるので、
-//       過去のツイートの追加・削除を全て確認する
+// 
+await initDownloadsDirectory(targetName);
+
+// 
 const tweets = await getRemoteTweets();
 
+// メモ: 「いいね」はツイートの投稿日時順に取得されるため、過去のツイートが追加される可能性があるので、
+//       過去のツイートの追加・削除を全て確認する
 const data = await readLocalJsonp(targetName, 'favorites.js');
 const localTweets = (data ? data.favorites : []);
 
@@ -84,8 +88,6 @@ mergedTweets.sort((a, b) => minus(b['id_str'], a['id_str']));
 
 // 
 printCountOfTweets(localTweets.length, addedTweets.length, removedTweets.length, tweets.length, mergedTweets.length);
-
-await initDownloadsDirectory(targetName);
 
 await writeLocalJsonp(targetName, 'favorites.js', { favorites: mergedTweets });
 
