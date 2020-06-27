@@ -86,7 +86,7 @@ export const writeLocalJsonp = async (targetName, path, obj) => {
 
 	const jsonp = 'window.data = window.data || {};\n' +
 		Object.entries(obj).map(([key, value]) =>
-				'\nwindow.data[\'' + key + '\'] = ' + JSON.stringify(value, null, 4) + ';\n').join('');
+				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
 
 	return Deno.writeTextFile(pathWithDir, jsonp);
 
