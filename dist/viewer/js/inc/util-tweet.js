@@ -24,7 +24,7 @@
 		getTweetUserHTML(tweet['user']) +
 		getCreatedAtLink(tweet) + '<br>' +
 		getTweetReplayingToUserLink(tweet) +
-		getTweetFullText(tweet) + '<br>';
+		'<div lang="' + tweet['lang'] + '">' + getTweetFullText(tweet) + '</div>';
 
 	const getTweetUserHTML = user => {
 
