@@ -1,4 +1,14 @@
-(() => {
+(async () => {
+
+	const importInNoModule = window.importInNoModule;
+
+	await Promise.all([
+			importInNoModule('./js/inc/util.js'),
+			importInNoModule('./js/inc/util-media.js'),
+			importInNoModule('./js/inc/util-user.js'),
+			importInNoModule('./js/inc/renderer-users.js'),
+			importInNoModule('./jsonp/following.js')
+	]);
 
 	const users = window.data.following;
 	const removedUsers = window.data.removedFollowing;
