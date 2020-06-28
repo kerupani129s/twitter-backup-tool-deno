@@ -80,11 +80,13 @@ export const readLocalJsonp = async (targetName, path) => {
 
 };
 
-export const writeLocalJsonp = async (targetName, path, obj) => {
+export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
 
 	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
 
 	const jsonp = 'window.data = window.data || {};\n' +
+		Object.entries(initObj).map(([key, value]) =>
+				'\nwindow.data.' + key + ' = window.data.' + key + ' || ' + JSON.stringify(value, null, 4) + ';\n').join('') +
 		Object.entries(obj).map(([key, value]) =>
 				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
 
