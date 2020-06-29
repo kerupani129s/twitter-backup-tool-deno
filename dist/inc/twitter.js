@@ -29,7 +29,13 @@ export default class Twitter {
 
         const response = await fetch((! params || method === 'POST' ? url : url + '?' + query), {method, headers});
 
-        return response.json();
+        const json = await response.json();
+
+        // response.ok で正しく判断できる？
+        if ( 'errors' in json )
+            throw 'TwitterApiErrors:\n' + json['errors'].map(error => '\tCode ' + error.code + ': ' + error.message).join('\n');
+
+        return json;
 
     }
 
