@@ -11,8 +11,8 @@
 			importInNoModule('./jsonp/favorites.js')
 	]);
 
-	const tweets = window.data.favorites;
 	const viewer = window.viewer;
+	const tweets = window.data.favorites;
 
 	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {

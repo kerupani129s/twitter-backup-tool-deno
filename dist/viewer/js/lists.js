@@ -10,9 +10,9 @@
 			importInNoModule('./jsonp/lists.js')
 	]);
 
+	const viewer = window.viewer;
 	const lists = window.data.lists;
 	const removedLists = window.data.removedLists;
-	const viewer = window.viewer;
 
 	await Promise.all(lists.map(list => importInNoModule('./jsonp/list.' + list['id_str'] + '.js')));
 

@@ -10,9 +10,9 @@
 			importInNoModule('./jsonp/followers.js')
 	]);
 
+	const viewer = window.viewer;
 	const users = window.data.followers;
 	const removedUsers = window.data.removedFollowers;
-	const viewer = window.viewer;
 
 	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {
