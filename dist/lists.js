@@ -23,8 +23,6 @@ const getRemoteLists = async () => {
 
 		const result = await twitter.get('lists/ownerships', params);
 
-		if ( result.length === 0 ) break;
-
 		result['lists'].forEach(list => {
 			lists.push(list);
 		});
