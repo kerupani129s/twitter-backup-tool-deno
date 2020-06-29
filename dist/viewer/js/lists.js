@@ -14,7 +14,9 @@
 	const lists = window.data.lists;
 	const removedLists = window.data.removedLists;
 
-	await Promise.all(lists.map(list => importInNoModule('./jsonp/list.' + list['id_str'] + '.js')));
+	const mergedLists = lists.concat(removedLists);
+
+	await Promise.all(mergedLists.map(list => importInNoModule('./jsonp/list.' + list['id_str'] + '.js')));
 
 	const listMembers = window.data.listMembers;
 	const removedListMembers = window.data.removedListMembers;
@@ -67,8 +69,6 @@
 	const contentsIterable = (function*() {
 
 		const contents = document.getElementById('contents');
-
-		const mergedLists = lists.concat(removedLists);
 
 		yield renderListsHeader(contents, 'Lists', mergedLists);
 
