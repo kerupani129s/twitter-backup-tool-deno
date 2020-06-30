@@ -1,6 +1,7 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { printCountOfUsers } from './inc/util-print-count.js';
 
 // 
 const [loginName, targetName] = Deno.args;
@@ -37,14 +38,6 @@ const getRemoteUsers = async () => {
 
 };
 
-const printCountOfUsers = (local, added, removed, remote, merged) => {
-
-	console.log('Count of Previous Saved Users: ' + local);
-	console.log('Count of Remote Users: ' + local + ' + ' + added + ' - ' + removed + ' = ' + remote);
-	console.log('Total Count of Users: ' + local + ' + ' + added + ' = ' + merged);
-
-};
-
 const downloadUserMedias = async users => {
 
 	// メモ: await を使用して直列実行したいため、forEach を使わない
@@ -74,7 +67,7 @@ const localUsers = (data ? data.following.concat(data.removedFollowing) : []);
 const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
 // 
-printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, removedUsers.length, users.length, users.length + removedUsers.length);
+printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
 
 await writeLocalJsonp(targetName, 'following.js', { following: users, removedFollowing: removedUsers });
 

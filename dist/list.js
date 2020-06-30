@@ -1,6 +1,7 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { printCountOfUsers, printCountOfLists } from './inc/util-print-count.js';
 
 // 
 const [loginName, targetList] = Deno.args;
@@ -45,21 +46,6 @@ const getRemoteUsers = async list => {
 	} while ( params['cursor'] !== '0' );
 
 	return users;
-
-};
-
-const printCountOfLists = (local, added, merged) => {
-
-	console.log('Count of Previous Saved Lists: ' + local);
-	console.log('Total Count of Lists: ' + local + ' + ' + added + ' = ' + merged);
-
-};
-
-const printCountOfUsers = (local, added, removed, remote, merged) => {
-
-	console.log('Count of Previous Saved Users: ' + local);
-	console.log('Count of Remote Users: ' + local + ' + ' + added + ' - ' + removed + ' = ' + remote);
-	console.log('Total Count of Users: ' + local + ' + ' + added + ' = ' + merged);
 
 };
 
@@ -119,7 +105,7 @@ const localUsers = (data2 ? data2.listMembers[listIdStr].concat(data2.removedLis
 const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
 // 
-printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, removedUsers.length, users.length, users.length + removedUsers.length);
+printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
 
 await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 	['listMembers[\'' + listIdStr + '\']']: users,

@@ -1,6 +1,7 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { printCountOfUsers, printCountOfLists } from './inc/util-print-count.js';
 
 // 
 const [loginName, targetName] = Deno.args;
@@ -65,22 +66,6 @@ const getRemoteUsers = async list => {
 
 };
 
-const printCountOfLists = (local, added, removed, remote, merged) => {
-
-	console.log('Count of Previous Saved Lists: ' + local);
-	console.log('Count of Remote Lists: ' + local + ' + ' + added + ' - ' + removed + ' = ' + remote);
-	console.log('Total Count of Lists: ' + local + ' + ' + added + ' = ' + merged);
-
-};
-
-const printCountOfUsers = (local, added, removed, remote, merged) => {
-
-	console.log('Count of Previous Saved Users: ' + local);
-	console.log('Count of Remote Users: ' + local + ' + ' + added + ' - ' + removed + ' = ' + remote);
-	console.log('Total Count of Users: ' + local + ' + ' + added + ' = ' + merged);
-
-};
-
 const downloadUserMedias = async users => {
 
 	// メモ: await を使用して直列実行したいため、forEach を使わない
@@ -110,7 +95,7 @@ const localLists = (data ? data.lists.concat(data.removedLists) : []);
 const removedLists = localLists.filter(a => lists.every(b => a['id_str'] !== b['id_str']));
 
 // 
-printCountOfLists(localLists.length, lists.length + removedLists.length - localLists.length, removedLists.length, lists.length, lists.length + removedLists.length);
+printCountOfLists(localLists.length, lists.length + removedLists.length - localLists.length, lists.length + removedLists.length, removedLists.length, lists.length);
 
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
 
@@ -130,7 +115,7 @@ for (const list of lists) {
 	const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
 	// 
-	printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, removedUsers.length, users.length, users.length + removedUsers.length);
+	printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
 
 	await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 		['listMembers[\'' + listIdStr + '\']']: users,

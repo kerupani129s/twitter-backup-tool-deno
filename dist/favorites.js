@@ -3,6 +3,7 @@ import { minus } from 'https://deno.land/x/math@v1.1.0/mod.ts';
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, downloadTweetMedia, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { printCountOfTweets } from './inc/util-print-count.js';
 
 // 
 const [loginName, targetName] = Deno.args;
@@ -45,14 +46,6 @@ const getRemoteTweets = async () => {
 
 };
 
-const printCountOfTweets = (local, added, removed, remote, merged) => {
-
-	console.log('Count of Previous Saved Tweets: ' + local);
-	console.log('Count of Remote Tweets: ' + local + ' + ' + added + ' - ' + removed + ' = ' + remote);
-	console.log('Total Count of Tweets: ' + local + ' + ' + added + ' = ' + merged);
-
-};
-
 const downloadTweetMedias = async tweets => {
 
 	// メモ: await を使用して直列実行したいため、forEach を使わない
@@ -87,7 +80,7 @@ const mergedTweets = localTweets.concat(addedTweets);
 mergedTweets.sort((a, b) => minus(b['id_str'], a['id_str']));
 
 // 
-printCountOfTweets(localTweets.length, addedTweets.length, removedTweets.length, tweets.length, mergedTweets.length);
+printCountOfTweets(localTweets.length, addedTweets.length, mergedTweets.length, removedTweets.length, tweets.length);
 
 await writeLocalJsonp(targetName, 'favorites.js', { favorites: mergedTweets });
 
