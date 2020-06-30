@@ -1,6 +1,8 @@
 import { download } from 'https://deno.land/x/download/mod.ts';
 import { copy, exists } from 'https://deno.land/std/fs/mod.ts';
 
+import { print } from './util-print.js';
+
 import  '../viewer/js/inc/util-media.js';
 
 // 
@@ -21,7 +23,7 @@ export const initDownloadsDirectory = async targetName => {
 };
 
 // 
-export const downloadTweetMedia = async (tweet, targetName) => {
+const downloadTweetMedia = async (targetName, tweet) => {
 
 	if ( 'media' in tweet['entities'] ) {
 		// メモ: await を使用して直列実行したいため、forEach を使わない
@@ -54,7 +56,7 @@ const getMediaUrl = media => {
 };
 
 // 
-export const downloadProfileImage = async (user, targetName) => {
+const downloadProfileImage = async (targetName, user) => {
 
 	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
 
@@ -91,5 +93,49 @@ export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
 				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
 
 	return Deno.writeTextFile(pathWithDir, jsonp);
+
+};
+
+// 
+export const downloadTweetMedias = async (targetName, tweets) => {
+
+	if ( tweets.length === 0 ) return;
+
+	print('\n');
+
+	// メモ: await を使用して直列実行したいため、forEach を使わない
+	for (let i = 0; i < tweets.length; i++) {
+
+		const tweet = tweets[i];
+
+		await downloadProfileImage(targetName, tweet['user']);
+		await downloadTweetMedia(targetName, tweet);
+
+		print('' + (i + 1) + ' / ' + tweets.length + '\r');
+
+	}
+
+	print('\n');
+
+};
+
+export const downloadUserMedias = async (targetName, users) => {
+
+	if ( users.length === 0 ) return;
+
+	print('\n');
+
+	// メモ: await を使用して直列実行したいため、forEach を使わない
+	for (let i = 0; i < users.length; i++) {
+
+		const user = users[i];
+
+		await downloadProfileImage(targetName, user);
+
+		print('' + (i + 1) + ' / ' + users.length + '\r');
+
+	}
+
+	print('\n');
 
 };

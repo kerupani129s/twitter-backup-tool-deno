@@ -1,7 +1,7 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
-import { initDownloadsDirectory, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
-import { print, printCountDiff } from './inc/util-print.js';
+import { initDownloadsDirectory, downloadUserMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { printCountDiff } from './inc/util-print.js';
 
 // 
 const [loginName, targetName] = Deno.args;
@@ -66,27 +66,6 @@ const getRemoteUsers = async list => {
 
 };
 
-const downloadUserMedias = async users => {
-
-	if ( users.length === 0 ) return;
-
-	print('\n');
-
-	// メモ: await を使用して直列実行したいため、forEach を使わない
-	for (let i = 0; i < users.length; i++) {
-
-		const user = users[i];
-
-		await downloadProfileImage(user, targetName);
-
-		print('' + (i + 1) + ' / ' + users.length + '\r');
-
-	}
-
-	print('\n');
-
-};
-
 // 
 await initDownloadsDirectory(targetName);
 
@@ -132,6 +111,6 @@ for (const list of lists) {
 	});
 
 	// メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
-	await downloadUserMedias(users);
+	await downloadUserMedias(targetName, users);
 
 }

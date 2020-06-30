@@ -2,8 +2,8 @@ import { minus } from 'https://deno.land/x/math@v1.1.0/mod.ts';
 
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
-import { initDownloadsDirectory, downloadTweetMedia, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
-import { print, printCountDiff } from './inc/util-print.js';
+import { initDownloadsDirectory, downloadTweetMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { printCountDiff } from './inc/util-print.js';
 
 // 
 const [loginName, targetName] = Deno.args;
@@ -46,28 +46,6 @@ const getRemoteTweets = async () => {
 
 };
 
-const downloadTweetMedias = async tweets => {
-
-	if ( tweets.length === 0 ) return;
-
-	print('\n');
-
-	// メモ: await を使用して直列実行したいため、forEach を使わない
-	for (let i = 0; i < tweets.length; i++) {
-
-		const tweet = tweets[i];
-
-		await downloadProfileImage(tweet['user'], targetName);
-		await downloadTweetMedia(tweet, targetName);
-
-		print('' + (i + 1) + ' / ' + tweets.length + '\r');
-
-	}
-
-	print('\n');
-
-};
-
 // 
 await initDownloadsDirectory(targetName);
 
@@ -91,4 +69,4 @@ printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.le
 await writeLocalJsonp(targetName, 'favorites.js', { favorites: mergedTweets });
 
 // ツイート追加分のみメディアをダウンロード
-await downloadTweetMedias(addedTweets);
+await downloadTweetMedias(targetName, addedTweets);
