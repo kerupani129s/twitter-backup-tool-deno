@@ -1,7 +1,7 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
-import { printCountOfUsers, printCountOfLists } from './inc/util-print-count.js';
+import { print, printCountDiff } from './inc/util-print.js';
 
 // 
 const [loginName, targetName] = Deno.args;
@@ -68,6 +68,10 @@ const getRemoteUsers = async list => {
 
 const downloadUserMedias = async users => {
 
+	if ( users.length === 0 ) return;
+
+	print('\n');
+
 	// メモ: await を使用して直列実行したいため、forEach を使わない
 	for (let i = 0; i < users.length; i++) {
 
@@ -75,9 +79,11 @@ const downloadUserMedias = async users => {
 
 		await downloadProfileImage(user, targetName);
 
-		console.log('' + (i + 1) + ' / ' + users.length);
+		print('' + (i + 1) + ' / ' + users.length + '\r');
 
 	}
+
+	print('\n');
 
 };
 
@@ -95,7 +101,7 @@ const localLists = (data ? data.lists.concat(data.removedLists) : []);
 const removedLists = localLists.filter(a => lists.every(b => a['id_str'] !== b['id_str']));
 
 // 
-printCountOfLists(localLists.length, lists.length + removedLists.length - localLists.length, lists.length + removedLists.length, removedLists.length, lists.length);
+printCountDiff('Lists', localLists.length, lists.length + removedLists.length - localLists.length, lists.length + removedLists.length, removedLists.length, lists.length);
 
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
 
@@ -115,7 +121,7 @@ for (const list of lists) {
 	const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
 	// 
-	printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
+	printCountDiff('Users', localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
 
 	await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 		['listMembers[\'' + listIdStr + '\']']: users,

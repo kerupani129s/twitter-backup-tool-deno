@@ -1,7 +1,7 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, downloadProfileImage, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
-import { printCountOfUsers, printCountOfLists } from './inc/util-print-count.js';
+import { print, printCountDiff } from './inc/util-print.js';
 
 // 
 const [loginName, targetList] = Deno.args;
@@ -51,6 +51,10 @@ const getRemoteUsers = async list => {
 
 const downloadUserMedias = async users => {
 
+	if ( users.length === 0 ) return;
+
+	print('\n');
+
 	// メモ: await を使用して直列実行したいため、forEach を使わない
 	for (let i = 0; i < users.length; i++) {
 
@@ -58,9 +62,11 @@ const downloadUserMedias = async users => {
 
 		await downloadProfileImage(user, targetName);
 
-		console.log('' + (i + 1) + ' / ' + users.length);
+		print('' + (i + 1) + ' / ' + users.length + '\r');
 
 	}
+
+	print('\n');
 
 };
 
@@ -87,7 +93,7 @@ const removedLists = localRemovedLists.filter(a => a['id_str'] !== list['id_str'
 const lists = localRawLists.concat(addedLists);
 
 // 
-printCountOfLists(localRawLists.length + localRemovedLists.length, addedLists.length, lists.length + removedLists.length);
+printCountDiff('Lists', localRawLists.length + localRemovedLists.length, addedLists.length, lists.length + removedLists.length);
 
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
 
@@ -105,7 +111,7 @@ const localUsers = (data2 ? data2.listMembers[listIdStr].concat(data2.removedLis
 const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
 // 
-printCountOfUsers(localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
+printCountDiff('Users', localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
 
 await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 	['listMembers[\'' + listIdStr + '\']']: users,
