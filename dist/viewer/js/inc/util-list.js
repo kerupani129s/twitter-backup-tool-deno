@@ -21,7 +21,7 @@
 	viewer.renderListHeader = (contents, list) => {
 
 		contents.insertAdjacentHTML('beforeend',
-				'<header class="content content-header">' +
+				'<header class="content list-header">' +
 				'"' + list['name'] + '"' +
 				(list['mode'] === 'private' ? '<span class="list-private">&#x1f512;</span>' : '') +
 				'<br>' +

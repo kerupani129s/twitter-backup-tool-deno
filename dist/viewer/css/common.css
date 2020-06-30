@@ -7,6 +7,11 @@
 	outline: solid #888 3px;
 }
 
+.list-header {
+	padding: 0.8em 1em;
+	outline: solid #ccc 3px;
+}
+
 .user-profile-image {
 	width: 48px;
 }
