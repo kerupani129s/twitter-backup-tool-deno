@@ -101,4 +101,5 @@ await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 });
 
 // メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
+await downloadUserMedias(targetName, [list['user']]);
 await downloadUserMedias(targetName, users);
