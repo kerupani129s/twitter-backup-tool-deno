@@ -6,6 +6,7 @@
 			importInNoModule('./js/inc/util.js'),
 			importInNoModule('./js/inc/util-media.js'),
 			importInNoModule('./js/inc/util-user.js'),
+			importInNoModule('./js/inc/util-list.js'),
 			importInNoModule('./js/inc/renderer-users.js'),
 			importInNoModule('./jsonp/lists.js')
 	]);
@@ -20,31 +21,6 @@
 
 	const listMembers = window.data.listMembers;
 	const removedListMembers = window.data.removedListMembers;
-
-	// 
-	const renderListsHeader = (contents, name, lists) => {
-
-		contents.insertAdjacentHTML('beforeend',
-				'<header class="content content-header">' +
-				name + '<br>' +
-				'Total Count: ' + lists.length +
-				'</header>');
-
-		return contents.lastElementChild;
-
-	};
-
-	const renderListHeader = (contents, name, users, list) => {
-
-		const nameHTML = '"' + list['name'] + '"' +
-			(list['mode'] === 'private' ? '<span class="list-private">&#x1f512;</span>' : '') +
-			'<br>' +
-			(list['description'] ? viewer.nl2br(list['description']) + '<br>' : '') + '<br>' +
-			name;
-
-		return viewer.renderUsersHeader(contents, nameHTML, users);
-
-	};
 
 	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {
@@ -70,7 +46,7 @@
 
 		const contents = document.getElementById('contents');
 
-		yield renderListsHeader(contents, 'Lists', mergedLists);
+		yield viewer.renderListsHeader(contents, 'Lists', mergedLists);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const list of mergedLists) {
@@ -81,7 +57,10 @@
 			const removedUsers = removedListMembers[listIdStr];
 
 			// 
-			yield renderListHeader(contents, 'Members', users, list);
+			viewer.renderListHeader(contents, list);
+
+			// 
+			yield viewer.renderUsersHeader(contents, 'Members', users);
 
 			// メモ: yield を使用したいため、forEach を使わない
 			for (const user of users) {
@@ -89,7 +68,7 @@
 			};
 
 			// 
-			yield renderListHeader(contents, 'Removed Members', removedUsers, list);
+			yield viewer.renderUsersHeader(contents, 'Removed Members', removedUsers);
 
 			// メモ: yield を使用したいため、forEach を使わない
 			for (const user of removedUsers) {
