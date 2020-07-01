@@ -21,7 +21,7 @@
 
 	};
 
-	viewer.getLocalBaseNameOf = mediaUrl => {
+	viewer.getLocalMediaFileName = mediaUrl => {
 
 		// TODO: 本当はこれだけでは不十分。URL の仕様上はクエリパラメータにスラッシュが含まれる可能性がある
 		const baseName = mediaUrl.substring(mediaUrl.lastIndexOf('/') + 1);

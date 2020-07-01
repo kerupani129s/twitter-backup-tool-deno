@@ -30,7 +30,7 @@ const downloadTweetMedia = async (targetName, tweet) => {
 		for (const media of tweet['extended_entities']['media']) {
 
 			const mediaUrl = getMediaUrl(media);
-			const file = viewer.getLocalBaseNameOf(mediaUrl);
+			const file = viewer.getLocalMediaFileName(mediaUrl);
 			const dir = './downloads/' + targetName + '/media/';
 
 			if ( ! await exists(dir + file) )
@@ -60,7 +60,7 @@ const downloadProfileImage = async (targetName, user) => {
 
 	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
 
-	const file = viewer.getLocalBaseNameOf(mediaUrl);
+	const file = viewer.getLocalMediaFileName(mediaUrl);
 	const dir = './downloads/' + targetName + '/profile_image/';
 
 	if ( ! await exists(dir + file) )

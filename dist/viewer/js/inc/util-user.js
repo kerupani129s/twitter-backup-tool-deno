@@ -14,7 +14,7 @@
 		const urlLink = (user['url'] ? viewer.replaceEntitiesToLinks(user['url'], user['entities']['url']) + '<br>' : '');
 
 		// メモ: user['lang'] は廃止されていて、公式の WEB クライアントでも lang 属性は付けられていない
-		return '<img class="user-profile-image" src="./profile_image/' + viewer.getLocalBaseNameOf(profileImageUrlOriginal) + '"><br>' +
+		return '<img class="user-profile-image" src="./profile_image/' + viewer.getLocalMediaFileName(profileImageUrlOriginal) + '"><br>' +
 			user['name'] +
 			(user['verified'] ? '<span class="user-verified">&#x2714;</span>' : '') +
 			(user['protected'] ? '<span class="user-protected">&#x1f512;</span>' : '') +
