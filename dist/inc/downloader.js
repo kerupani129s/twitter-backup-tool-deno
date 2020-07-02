@@ -33,8 +33,13 @@ const downloadTweetMedia = async (targetName, tweet) => {
 			const file = viewer.getLocalMediaFileName(mediaUrl);
 			const dir = './downloads/' + targetName + '/media/';
 
-			if ( ! await exists(dir + file) )
-				await download(mediaUrl, { file, dir });
+			if ( ! await exists(dir + file) ) {
+				try {
+					await download(mediaUrl, { file, dir });
+				} catch {
+					console.error('NetworkError: ' + mediaUrl);
+				}
+			}
 
 		}
 	}
@@ -63,8 +68,13 @@ const downloadProfileImage = async (targetName, user) => {
 	const file = viewer.getLocalMediaFileName(mediaUrl);
 	const dir = './downloads/' + targetName + '/profile_image/';
 
-	if ( ! await exists(dir + file) )
-		await download(mediaUrl, { file, dir });
+	if ( ! await exists(dir + file) ) {
+		try {
+			await download(mediaUrl, { file, dir });
+		} catch {
+			console.error('NetworkError: ' + mediaUrl);
+		}
+	}
 
 };
 
