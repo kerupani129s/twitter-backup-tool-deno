@@ -37,8 +37,8 @@
 
 		const {dir, name, ext, query} = parsePath(mediaUrl);
 
-		const matchedIdStr = dir.match(/\/([0-9]+)\//) ?? [];
-		const [, idStr] = matchedIdStr.map(match => match ?? '');
+		const matchedIdStr = dir.match(/\/([0-9]+)\//) || [];
+		const [, idStr] = matchedIdStr.map(match => match || '');
 
 		const localFileNameRaw = idStr + '/' + name + (query !== '' ? ext + query + ext : ext);
 
@@ -48,11 +48,11 @@
 
 	const parsePath = url => {
 
-		const matchedFileName = url.match(/^(?:[^:\/?#]+:)?(?:\/\/[^\/?#]*)?(?:([^?#]*\/)([^\/?#]*))?(\?[^#]*)?(?:#.*)?$/) ?? [];
-		const [, dir, fileName, query] = matchedFileName.map(match => match ?? '');
+		const matchedFileName = url.match(/^(?:[^:\/?#]+:)?(?:\/\/[^\/?#]*)?(?:([^?#]*\/)([^\/?#]*))?(\?[^#]*)?(?:#.*)?$/) || [];
+		const [, dir, fileName, query] = matchedFileName.map(match => match || '');
 
-		const matchedExt = fileName.match(/^(.+?)(\.[^.]+)?$/) ?? [];
-		const [, name, ext] = matchedExt.map(match => match ?? '');
+		const matchedExt = fileName.match(/^(.+?)(\.[^.]+)?$/) || [];
+		const [, name, ext] = matchedExt.map(match => match || '');
 
 		return {dir, name, ext, query};
 
