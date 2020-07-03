@@ -1,10 +1,10 @@
 import { download } from 'https://deno.land/x/download/mod.ts';
 import { copy, exists } from 'https://deno.land/std/fs/mod.ts';
 
+import { print } from './util-print.js';
+
 import  '../viewer/js/inc/util-media.js';
 
-// 
-// 
 // 
 export const initDownloadsDirectory = async targetName => {
 
@@ -22,26 +22,24 @@ export const initDownloadsDirectory = async targetName => {
 
 };
 
-export const downloadJsonp = (targetName, path, jsonp) => {
-	const dir = './downloads/' + targetName + '/jsonp/' + path;
-	return Deno.writeTextFile(dir, jsonp);
-};
-
 // 
-// 
-// 
-export const downloadTweetMedia = async (tweet, targetName) => {
+const downloadTweetMedia = async (targetName, tweet) => {
 
 	if ( 'media' in tweet['entities'] ) {
 		// メモ: await を使用して直列実行したいため、forEach を使わない
 		for (const media of tweet['extended_entities']['media']) {
 
 			const mediaUrl = getMediaUrl(media);
-			const file = viewer.getLocalBaseNameOf(mediaUrl);
+			const file = viewer.getLocalTweetMediaFileName(mediaUrl);
 			const dir = './downloads/' + targetName + '/media/';
 
-			if ( ! await exists(dir + file) )
-				await download(mediaUrl, { file, dir });
+			if ( ! await exists(dir + file) ) {
+				try {
+					await download(mediaUrl, { file, dir });
+				} catch {
+					console.error('NetworkError: ' + mediaUrl);
+				}
+			}
 
 		}
 	}
@@ -63,22 +61,30 @@ const getMediaUrl = media => {
 };
 
 // 
-// 
-// 
-export const downloadProfileImage = async (user, targetName) => {
+const downloadProfileImage = async (targetName, user) => {
 
 	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
 
-	const file = viewer.getLocalBaseNameOf(mediaUrl);
+	const file = viewer.getLocalProfileImageFileName(mediaUrl);
 	const dir = './downloads/' + targetName + '/profile_image/';
 
-	if ( ! await exists(dir + file) )
-		await download(mediaUrl, { file, dir });
+	// TODO: 安定版では以下のコードを削除
+	//       ver.2.0-pre-alpha.1 -> ver.2.0-pre-alpha.2 バージョンアップ用
+	const fileOld = viewer.getLocalTweetMediaFileName(mediaUrl);
+	if ( await exists(dir + fileOld) )
+		await Deno.rename(dir + fileOld, dir + file);
+
+	// 
+	if ( ! await exists(dir + file) ) {
+		try {
+			await download(mediaUrl, { file, dir });
+		} catch {
+			console.error('NetworkError: ' + mediaUrl);
+		}
+	}
 
 };
 
-// 
-// 
 // 
 export const readLocalJsonp = async (targetName, path) => {
 
@@ -90,5 +96,63 @@ export const readLocalJsonp = async (targetName, path) => {
 	} else {
 		return;
 	}
+
+};
+
+export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
+
+	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+
+	const jsonp = 'window.data = window.data || {};\n' +
+		Object.entries(initObj).map(([key, value]) =>
+				'\nwindow.data.' + key + ' = window.data.' + key + ' || ' + JSON.stringify(value, null, 4) + ';\n').join('') +
+		Object.entries(obj).map(([key, value]) =>
+				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
+
+	return Deno.writeTextFile(pathWithDir, jsonp);
+
+};
+
+// 
+export const downloadTweetMedias = async (targetName, tweets) => {
+
+	if ( tweets.length === 0 ) return;
+
+	print('\n');
+
+	// メモ: await を使用して直列実行したいため、forEach を使わない
+	for (let i = 0; i < tweets.length; i++) {
+
+		const tweet = tweets[i];
+
+		await downloadProfileImage(targetName, tweet['user']);
+		await downloadTweetMedia(targetName, tweet);
+
+		print('' + (i + 1) + ' / ' + tweets.length + '\r');
+
+	}
+
+	print('\n');
+
+};
+
+export const downloadUserMedias = async (targetName, users) => {
+
+	if ( users.length === 0 ) return;
+
+	print('\n');
+
+	// メモ: await を使用して直列実行したいため、forEach を使わない
+	for (let i = 0; i < users.length; i++) {
+
+		const user = users[i];
+
+		await downloadProfileImage(targetName, user);
+
+		print('' + (i + 1) + ' / ' + users.length + '\r');
+
+	}
+
+	print('\n');
 
 };

@@ -1,7 +1,18 @@
-(() => {
+(async () => {
 
-	const tweets = window.data.favorites;
+	const importInNoModule = window.importInNoModule;
+
+	await Promise.all([
+			importInNoModule('./js/inc/util.js'),
+			importInNoModule('./js/inc/util-media.js'),
+			importInNoModule('./js/inc/util-tweet.js'),
+			importInNoModule('./js/inc/util-tweet-media.js'),
+			importInNoModule('./js/inc/renderer-tweets.js'),
+			importInNoModule('./jsonp/favorites.js')
+	]);
+
 	const viewer = window.viewer;
+	const tweets = window.data.favorites;
 
 	// 
 	const infiniteScrollObserver = new IntersectionObserver(entries => {
@@ -28,39 +39,14 @@
 		const contents = document.getElementById('contents');
 
 		// 
-		yield renderTweetsHeader(contents, 'Favorites', tweets);
+		yield viewer.renderTweetsHeader(contents, 'Favorites', tweets);
 
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const tweet of tweets) {
-			yield renderTweet(contents, tweet);
+			yield viewer.renderTweet(contents, tweet);
 		};
 
 	})();
-
-	// 
-	const renderTweetsHeader = (contents, name, tweets) => {
-
-		contents.insertAdjacentHTML('beforeend',
-				'<header class="content content-header">' +
-				name + '<br>' +
-				'Total Count: ' + tweets.length +
-				'</header>');
-
-		return contents.lastElementChild;
-
-	};
-
-	const renderTweet = (contents, tweet) => {
-
-		contents.insertAdjacentHTML('beforeend',
-				'<article class="content tweet">' +
-				viewer.getTweetHTML(tweet) +
-				viewer.getTweetMediaHTML(tweet) +
-				'</article>');
-
-		return contents.lastElementChild;
-
-	};
 
 	// 
 	loadContent();

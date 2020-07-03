@@ -23,7 +23,7 @@ const getRemoteUsers = async () => {
 
 	do {
 
-		const result = await twitter.get('followers/list', params);
+		const result = await twitter.get('friends/list', params);
 
 		result['users'].forEach(user => {
 			users.push(user);
@@ -46,15 +46,15 @@ const users = await getRemoteUsers();
 
 // メモ: 一時的なアカウント削除などで一度削除されたユーザーが戻ることがあるため、
 //       削除済みユーザーも一度まとめる
-const data = await readLocalJsonp(targetName, 'followers.js');
-const localUsers = (data ? data.followers.concat(data.removedFollowers) : []);
+const data = await readLocalJsonp(targetName, 'following.js');
+const localUsers = (data ? data.following.concat(data.removedFollowing) : []);
 
 const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
 // 
 printCountDiff('Users', localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
 
-await writeLocalJsonp(targetName, 'followers.js', { followers: users, removedFollowers: removedUsers });
+await writeLocalJsonp(targetName, 'following.js', { following: users, removedFollowing: removedUsers });
 
 // メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
 await downloadUserMedias(targetName, users);
