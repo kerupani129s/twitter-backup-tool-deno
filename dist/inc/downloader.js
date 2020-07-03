@@ -30,7 +30,7 @@ const downloadTweetMedia = async (targetName, tweet) => {
 		for (const media of tweet['extended_entities']['media']) {
 
 			const mediaUrl = getMediaUrl(media);
-			const file = viewer.getLocalMediaFileName(mediaUrl);
+			const file = viewer.getLocalTweetMediaFileName(mediaUrl);
 			const dir = './downloads/' + targetName + '/media/';
 
 			if ( ! await exists(dir + file) ) {
@@ -65,9 +65,16 @@ const downloadProfileImage = async (targetName, user) => {
 
 	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
 
-	const file = viewer.getLocalMediaFileName(mediaUrl);
+	const file = viewer.getLocalProfileImageFileName(mediaUrl);
 	const dir = './downloads/' + targetName + '/profile_image/';
 
+	// TODO: 安定版では以下のコードを削除
+	//       ver.2.0-pre-alpha.1 -> ver.2.0-pre-alpha.2 バージョンアップ用
+	const fileOld = viewer.getLocalTweetMediaFileName(mediaUrl);
+	if ( await exists(dir + fileOld) )
+		await Deno.rename(dir + fileOld, dir + file);
+
+	// 
 	if ( ! await exists(dir + file) ) {
 		try {
 			await download(mediaUrl, { file, dir });

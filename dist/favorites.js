@@ -68,5 +68,13 @@ printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.le
 
 await writeLocalJsonp(targetName, 'favorites.js', { favorites: mergedTweets });
 
-// ツイート追加分のみメディアをダウンロード
+// ローカルとリモートの両方に存在するツイートのメディアをダウンロード
+// 過去に取得したツイートのメディアダウンロードが失敗している場合に、再取得する用
+const bothTweets = localTweets.filter(a => tweets.some(b => a['id_str'] === b['id_str']));
+
+// TODO: ver.2.0-pre-alpha.1 -> ver.2.0-pre-alpha.2 アップデート時は
+//       一時的に bothTweets を localTweets に書き換えて取得
+await downloadTweetMedias(targetName, bothTweets);
+
+// ツイート追加分のメディアをダウンロード
 await downloadTweetMedias(targetName, addedTweets);

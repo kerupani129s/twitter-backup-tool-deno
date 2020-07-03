@@ -5,8 +5,6 @@
 	const viewer = window.viewer;
 
 	// 
-	// 
-	// 
 	viewer.getImageUrlLarge = urlDefault => {
 		return urlDefault; // メモ: 2020/02/22 現在はそのままの URL
 	};
@@ -21,19 +19,41 @@
 
 	};
 
-	viewer.getLocalMediaFileName = mediaUrl => {
-
-		// TODO: 本当はこれだけでは不十分。URL の仕様上はクエリパラメータにスラッシュが含まれる可能性がある
-		const baseName = mediaUrl.substring(mediaUrl.lastIndexOf('/') + 1);
-
-		return viewer.percentEncode(baseName);
-
-	};
-
+	// 
 	viewer.getProfileImageUrlOriginal = normal => normal.replace('_normal.', '.');
 
 	// 
-	// 
+	viewer.getLocalTweetMediaFileName = mediaUrl => {
+
+		const matchedFileName = mediaUrl.match(/^(?:[^:\/?#]+:)?(?:\/\/[^\/?#]*)?(?:([^?#]*\/)([^\/?#]*))?(\?(?:[^#]*))?(?:#.*)?$/) ?? [];
+		const [, dir, fileName, query] = matchedFileName.map(match => match ?? '');
+
+		const matchedExt = fileName.match(/^(.+?)(\.[^.]+)?$/) ?? [];
+		const [, name, ext] = matchedExt.map(match => match ?? '');
+
+		const localFileNameRaw = name + (query !== '' ? ext + query + ext : ext);
+
+		return viewer.percentEncode(localFileNameRaw);
+
+	};
+
+	viewer.getLocalProfileImageFileName = mediaUrl => {
+
+		const matchedFileName = mediaUrl.match(/^(?:[^:\/?#]+:)?(?:\/\/[^\/?#]*)?(?:([^?#]*\/)([^\/?#]*))?(\?(?:[^#]*))?(?:#.*)?$/) ?? [];
+		const [, dir, fileName, query] = matchedFileName.map(match => match ?? '');
+
+		const matchedIdStr = dir.match(/\/([0-9]+)\//) ?? [];
+		const [, idStr] = matchedIdStr.map(match => match ?? '');
+
+		const matchedExt = fileName.match(/^(.+?)(\.[^.]+)?$/) ?? [];
+		const [, name, ext] = matchedExt.map(match => match ?? '');
+
+		const localFileNameRaw = idStr + '/' + name + (query !== '' ? ext + query + ext : ext);
+
+		return viewer.percentEncode(localFileNameRaw);
+
+	};
+
 	// 
 	/**
 	 * RFC3986 仕様の encodeURIComponent
