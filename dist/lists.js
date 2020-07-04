@@ -82,9 +82,21 @@ const removedLists = localLists.filter(a => lists.every(b => a['id_str'] !== b['
 printCountDiff('Lists', localLists.length, lists.length + removedLists.length - localLists.length, lists.length + removedLists.length, removedLists.length, lists.length);
 
 // 
-await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
+const removedListOwners = removedLists.map(list => list['user']);
+const listOwners = lists.map(list => list['user']);
+
+// TODO: 引き継ぎ用
+addUserMediasData(removedListOwners);
 
 // 
+addUserMediasData(listOwners);
+
+await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
+
+// メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
+await downloadUserMedias(targetName, listOwners);
+
+// メモ: await を使用して直列実行したいため、forEach を使わない
 for (const list of lists) {
 
 	const listIdStr = list['id_str'];
@@ -105,7 +117,6 @@ for (const list of lists) {
 	addUserMediasData(removedUsers);
 
 	// 
-	addUserMediasData([list['user']]);
 	addUserMediasData(users);
 
 	await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
@@ -117,7 +128,6 @@ for (const list of lists) {
 	});
 
 	// メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
-	await downloadUserMedias(targetName, [list['user']]);
 	await downloadUserMedias(targetName, users);
 
 }

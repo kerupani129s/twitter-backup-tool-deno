@@ -74,7 +74,19 @@ const lists = localRawLists.concat(addedLists);
 printCountDiff('Lists', localRawLists.length + localRemovedLists.length, addedLists.length, lists.length + removedLists.length);
 
 // 
+const listOwners = addedLists.map(list => list['user']);
+
+// TODO: 引き継ぎ用
+const localList = localRawLists.find(a => a['id_str'] === list['id_str']);
+addUserMediasData(localList ? [localList['user']] : []);
+
+// 
+addUserMediasData(listOwners);
+
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
+
+// メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
+await downloadUserMedias(targetName, listOwners);
 
 // 
 const listIdStr = list['id_str'];
@@ -95,7 +107,6 @@ printCountDiff('Users', localUsers.length, users.length + removedUsers.length - 
 addUserMediasData(removedUsers);
 
 // 
-addUserMediasData([list['user']]);
 addUserMediasData(users);
 
 await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
@@ -107,5 +118,4 @@ await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 });
 
 // メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
-await downloadUserMedias(targetName, [list['user']]);
 await downloadUserMedias(targetName, users);
