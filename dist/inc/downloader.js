@@ -22,12 +22,12 @@ export const initDownloadsDirectory = async targetName => {
 };
 
 // 
-export const readLocalJsonp = async (targetName, path) => {
+export const readLocalJsonp = async (targetName, fileName) => {
 
-	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+	const path = './downloads/' + targetName + '/jsonp/' + fileName;
 
-	if ( await exists(pathWithDir) ) {
-		await import(Deno.cwd() + '/' + pathWithDir);
+	if ( await exists(path) ) {
+		await import(Deno.cwd() + '/' + path);
 		return window.data;
 	} else {
 		return;
@@ -35,9 +35,9 @@ export const readLocalJsonp = async (targetName, path) => {
 
 };
 
-export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
+export const writeLocalJsonp = async (targetName, fileName, obj, initObj = {}) => {
 
-	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+	const path = './downloads/' + targetName + '/jsonp/' + fileName;
 
 	const jsonp = 'window.data = window.data || {};\n' +
 		Object.entries(initObj).map(([key, value]) =>
@@ -45,7 +45,7 @@ export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
 		Object.entries(obj).map(([key, value]) =>
 				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
 
-	return Deno.writeTextFile(pathWithDir, jsonp);
+	return Deno.writeTextFile(path, jsonp);
 
 };
 
