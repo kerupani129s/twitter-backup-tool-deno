@@ -4,7 +4,6 @@
 
 	await Promise.all([
 			importInNoModule('./js/inc/util.js'),
-			importInNoModule('./js/inc/util-media.js'),
 			importInNoModule('./js/inc/util-tweet.js'),
 			importInNoModule('./js/inc/util-tweet-media.js'),
 			importInNoModule('./js/inc/lazy-render.js'),
