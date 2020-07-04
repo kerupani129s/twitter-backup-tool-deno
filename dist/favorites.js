@@ -2,7 +2,7 @@ import { minus } from 'https://deno.land/x/math@v1.1.0/mod.ts';
 
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
-import { initDownloadsDirectory, downloadTweetMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { initDownloadsDirectory, addTweetMediasData, downloadTweetMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
 import { printCountDiff } from './inc/util-print.js';
 
 // 
@@ -63,8 +63,13 @@ const removedTweets = localTweets.filter(a => tweets.every(b => a['id_str'] !== 
 const mergedTweets = localTweets.concat(addedTweets);
 mergedTweets.sort((a, b) => minus(b['id_str'], a['id_str']));
 
-// 
 printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.length, removedTweets.length, tweets.length);
+
+// TODO: 引き継ぎ用
+addTweetMediasData(localTweets);
+
+// 
+addTweetMediasData(addedTweets);
 
 await writeLocalJsonp(targetName, 'favorites.js', { favorites: mergedTweets });
 

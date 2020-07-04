@@ -1,6 +1,6 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
-import { initDownloadsDirectory, downloadUserMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { initDownloadsDirectory, addUserMediasData, downloadUserMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
 import { printCountDiff } from './inc/util-print.js';
 
 // 
@@ -71,9 +71,9 @@ const removedLists = localRemovedLists.filter(a => a['id_str'] !== list['id_str'
 
 const lists = localRawLists.concat(addedLists);
 
-// 
 printCountDiff('Lists', localRawLists.length + localRemovedLists.length, addedLists.length, lists.length + removedLists.length);
 
+// 
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
 
 // 
@@ -89,8 +89,14 @@ const localUsers = (data2 ? data2.listMembers[listIdStr].concat(data2.removedLis
 
 const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
-// 
 printCountDiff('Users', localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
+
+// TODO: 引き継ぎ用
+addUserMediasData(removedUsers);
+
+// 
+addUserMediasData([list['user']]);
+addUserMediasData(users);
 
 await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 	['listMembers[\'' + listIdStr + '\']']: users,
