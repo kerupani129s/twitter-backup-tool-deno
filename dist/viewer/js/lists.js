@@ -7,6 +7,7 @@
 			importInNoModule('./js/inc/util-media.js'),
 			importInNoModule('./js/inc/util-user.js'),
 			importInNoModule('./js/inc/util-list.js'),
+			importInNoModule('./js/inc/lazy-render.js'),
 			importInNoModule('./js/inc/renderer-users.js'),
 			importInNoModule('./jsonp/lists.js')
 	]);
@@ -23,25 +24,6 @@
 	const removedListMembers = window.data.removedListMembers;
 
 	// 
-	const infiniteScrollObserver = new IntersectionObserver(entries => {
-		entries.forEach(entry => {
-			if ( ! entry.isIntersecting ) return;
-
-			infiniteScrollObserver.unobserve(entry.target);
-			loadContent();
-
-		});
-	});
-
-	const loadContent = () => {
-
-		const nextContent = contentsIterable.next();
-
-		if ( ! nextContent.done )
-			infiniteScrollObserver.observe(nextContent.value);
-
-	};
-
 	const contentsIterable = (function*() {
 
 		const contents = document.getElementById('contents');
@@ -80,6 +62,6 @@
 	})();
 
 	// 
-	loadContent();
+	viewer.lazyRenderContents(contentsIterable);
 
 })();
