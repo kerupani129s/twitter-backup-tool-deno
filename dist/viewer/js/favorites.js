@@ -6,7 +6,7 @@
 			importInNoModule('./js/inc/util.js'),
 			importInNoModule('./js/inc/util-tweet.js'),
 			importInNoModule('./js/inc/util-tweet-media.js'),
-			importInNoModule('./js/inc/lazy-render.js'),
+			importInNoModule('./js/inc/lazy-renderer.js'),
 			importInNoModule('./js/inc/renderer-tweets.js'),
 			importInNoModule('./jsonp/favorites.js')
 	]);
