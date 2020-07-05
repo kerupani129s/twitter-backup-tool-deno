@@ -25,6 +25,7 @@
 				'"' + list['name'] + '"' +
 				(list['mode'] === 'private' ? '<span class="list-private">&#x1f512;</span>' : '') +
 				'<br>' +
+				'<a href="https://twitter.com/' + list['uri'] + '">' + list['full_name'] + '</a><br>' +
 				(list['description'] ? viewer.nl2br(list['description']) + '<br>' : '') +
 				getListUserHTML(list['user']) +
 				'</header>');
