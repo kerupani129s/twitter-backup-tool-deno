@@ -8,13 +8,31 @@
 			importInNoModule('./js/inc/util-list.js'),
 			importInNoModule('./js/inc/lazy-renderer.js'),
 			importInNoModule('./js/inc/renderer-users.js'),
-			importInNoModule('./jsonp/lists.js')
+			importInNoModule('./jsonp/lists.js').catch(() => {})
 	]);
 
 	const viewer = window.viewer;
-	const lists = window.data.lists;
-	const removedLists = window.data.removedLists;
+	const data = window.data;
 
+	const lists = (data ? data.lists : null);
+	const removedLists = (data ? data.removedLists : null);
+
+	// 
+	if ( ! lists || ! removedLists ) {
+
+		const contents = document.getElementById('contents');
+
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Lists</header>');
+
+		contents.insertAdjacentHTML('beforeend', '<pre><code>./deno-run.sh lists.js &lt;loginName&gt; &lt;@targetName&gt;</code></pre>');
+		contents.insertAdjacentHTML('beforeend', '<p>or</p>');
+		contents.insertAdjacentHTML('beforeend', '<pre><code>./deno-run.sh list.js &lt;loginName&gt; &lt;targetListId&gt;</code></pre>');
+
+		return;
+
+	}
+
+	// 
 	const mergedLists = lists.concat(removedLists);
 
 	await Promise.all(mergedLists.map(list => importInNoModule('./jsonp/list.' + list['id_str'] + '.js')));

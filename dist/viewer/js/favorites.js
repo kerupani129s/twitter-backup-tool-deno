@@ -8,11 +8,26 @@
 			importInNoModule('./js/inc/util-tweet-media.js'),
 			importInNoModule('./js/inc/lazy-renderer.js'),
 			importInNoModule('./js/inc/renderer-tweets.js'),
-			importInNoModule('./jsonp/favorites.js')
+			importInNoModule('./jsonp/favorites.js').catch(() => {})
 	]);
 
 	const viewer = window.viewer;
-	const tweets = window.data.favorites;
+	const data = window.data;
+
+	const tweets = (data ? data.favorites : null);
+
+	// 
+	if ( ! tweets ) {
+
+		const contents = document.getElementById('contents');
+
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Favorites</header>');
+
+		contents.insertAdjacentHTML('beforeend', '<pre><code>./deno-run.sh favorites.js &lt;loginName&gt; &lt;@targetName&gt;</code></pre>');
+
+		return;
+
+	}
 
 	// 
 	const contentsIterable = (function*() {
