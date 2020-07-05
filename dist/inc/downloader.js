@@ -51,8 +51,16 @@ export const writeLocalJsonp = async (targetName, fileName, obj, initObj = {}) =
 
 // 
 export const addTweetMediasData = tweets => tweets.forEach(tweet => {
+
 	addProfileImageData(tweet['user']);
 	addTweetMediaData(tweet);
+
+	if ( 'retweeted_status' in tweet ) {
+		const retweetedStatus = tweet['retweeted_status'];
+		addProfileImageData(retweetedStatus['user']);
+		addTweetMediaData(retweetedStatus);
+	}
+
 });
 
 export const addUserMediasData = users => users.forEach(user => {
@@ -73,6 +81,12 @@ export const downloadTweetMedias = async (targetName, tweets) => {
 
 		await downloadProfileImage(targetName, tweet['user']);
 		await downloadTweetMedia(targetName, tweet);
+
+		if ( 'retweeted_status' in tweet ) {
+			const retweetedStatus = tweet['retweeted_status'];
+			await downloadProfileImage(targetName, retweetedStatus['user']);
+			await downloadTweetMedia(targetName, retweetedStatus);
+		}
 
 		print('' + (i + 1) + ' / ' + tweets.length + '\r');
 
