@@ -65,7 +65,7 @@ const oldestTweetIdStr = (oldestTweet ? oldestTweet['id_str'] : null);
 if ( localNewestTweetIdStr && oldestTweetIdStr && localNewestTweetIdStr === oldestTweetIdStr ) {
 	tweets.pop();
 } else if ( oldestTweet ) {
-	oldestTweet['_prev_tweet_is_unknown'] = true;
+	oldestTweet['_prev_status_is_unknown'] = true;
 }
 
 const addedTweets  = tweets;
