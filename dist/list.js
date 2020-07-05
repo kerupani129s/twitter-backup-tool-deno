@@ -1,3 +1,5 @@
+import { minus } from 'https://deno.land/x/math@v1.1.0/mod.ts';
+
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, addUserMediasData, downloadUserMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
@@ -58,35 +60,37 @@ const targetName = list['user']['screen_name'];
 await initDownloadsDirectory(targetName);
 
 // メモ: 一時的な非公開などで一度削除されたリストが戻ることがあるため、
-//       削除済みリストも確認する
+//       削除済みリストに対象リストが含まれているかも確認する
 // メモ: 対象のリストが削除されているかを確認するにはもう少し厳密に処理する必要があるため、
-//       ここでは削除リストを更新しない
+//       ここでは対象リストを削除リストにする更新はしない
 // メモ: 対象外のリストは削除確認もメディアファイル更新も行わない
 const data = await readLocalJsonp(targetName, 'lists.js');
 const localRawLists = (data ? data.lists : []);
 const localRemovedLists = (data ? data.removedLists : []);
 
-const addedLists = (localRawLists.every(a => a['id_str'] !== list['id_str']) ? [list] : []);
+const lists = localRawLists.filter(a => a['id_str'] !== list['id_str']).concat(list);
+lists.sort((a, b) => minus(b['id_str'], a['id_str']));
+
 const removedLists = localRemovedLists.filter(a => a['id_str'] !== list['id_str']);
 
-const lists = localRawLists.concat(addedLists);
-
-printCountDiff('Lists', localRawLists.length + localRemovedLists.length, addedLists.length, lists.length + removedLists.length);
+printCountDiff('Lists', localRawLists.length + localRemovedLists.length, lists.length + removedLists.length - localRawLists.length - localRemovedLists.length, lists.length + removedLists.length);
 
 // 
-const listOwners = addedLists.map(list => list['user']);
+const removedListOwners = removedLists.map(list => list['user']);
+const listOwners = lists.map(list => list['user']);
+
+const listOwner = list['user'];
 
 // TODO: 引き継ぎ用
-const localList = localRawLists.find(a => a['id_str'] === list['id_str']);
-addUserMediasData(localList ? [localList['user']] : []);
+addUserMediasData(listOwners.concat(removedListOwners));
 
 // 
-addUserMediasData(listOwners);
+addUserMediasData([listOwner]);
 
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
 
 // メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
-await downloadUserMedias(targetName, listOwners);
+await downloadUserMedias(targetName, [listOwner]);
 
 // 
 const listIdStr = list['id_str'];
