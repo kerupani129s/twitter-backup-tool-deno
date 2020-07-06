@@ -25,6 +25,7 @@
 				'"' + list['name'] + '"' +
 				(list['mode'] === 'private' ? '<span class="list-private">&#x1f512;</span>' : '') +
 				'<br>' +
+				'<a href="https://twitter.com/' + list['uri'] + '">' + list['full_name'] + '</a><br>' +
 				(list['description'] ? viewer.nl2br(list['description']) + '<br>' : '') +
 				getListUserHTML(list['user']) +
 				'</header>');
@@ -35,8 +36,7 @@
 
 	const getListUserHTML = user => {
 
-		const profileImageUrlOriginal = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
-		const localProfileImageFileName = viewer.getLocalProfileImageFileName(profileImageUrlOriginal);
+		const localProfileImageFileName = user['_local_profile_image_file_name'];
 
 		// メモ: localProfileImageFileName は % エンコードされているが、HTML として埋め込むにはさらに % エンコードが必要
 		return '<img class="user-profile-image" src="./profile_image/' + viewer.percentEncode(localProfileImageFileName) + '"><br>' +

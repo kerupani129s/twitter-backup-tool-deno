@@ -12,22 +12,22 @@ const profile = new Profile('./downloads/config.json');
 const twitter = new Twitter(await profile.get(loginName));
 
 // 
-const getRemoteTweets = async () => {
+const getRemoteTweets = async (sinceId = null) => {
 
-	// メモ: 「いいね」はツイートの投稿日時順に取得されるため、過去のツイートが追加される可能性があるので、
-	//       'since_id' は利用しない
 	const params = {
 		'screen_name': targetName,
 		'count': 200,
 		'tweet_mode': 'extended'
 	};
 
+	if ( sinceId ) params['since_id'] = sinceId;
+
 	// 
 	const tweets = [];
 
 	while (true) {
 
-		const result = await twitter.get('favorites/list', params);
+		const result = await twitter.get('statuses/user_timeline', params);
 
 		if ( result.length === 0 ) break;
 
@@ -50,28 +50,33 @@ const getRemoteTweets = async () => {
 await initDownloadsDirectory(targetName);
 
 // 
-const tweets = await getRemoteTweets();
+const data = await readLocalJsonp(targetName, 'user-timeline.js');
+const localTweets = (data ? data.userTimeline : []);
 
-// メモ: 「いいね」はツイートの投稿日時順に取得されるため、過去のツイートが追加される可能性があるので、
-//       過去のツイートの追加・削除を全て確認する
-const data = await readLocalJsonp(targetName, 'favorites.js');
-const localTweets = (data ? data.favorites : []);
+const localNewestTweet = localTweets[0];
+const localNewestTweetIdStr = (localNewestTweet ? localNewestTweet['id_str'] : null);
+const sinceId = (localNewestTweetIdStr ? minus(localNewestTweetIdStr, 1) : null);
 
-const addedTweets   = tweets.filter(a => localTweets.every(b => a['id_str'] !== b['id_str']));
-const removedTweets = localTweets.filter(a => tweets.every(b => a['id_str'] !== b['id_str']));
+const tweets = await getRemoteTweets(sinceId);
 
+const oldestTweet = (tweets.length > 0 ? tweets[tweets.length - 1] : null);
+const oldestTweetIdStr = (oldestTweet ? oldestTweet['id_str'] : null);
+
+if ( localNewestTweetIdStr && oldestTweetIdStr && localNewestTweetIdStr === oldestTweetIdStr ) {
+	tweets.pop();
+} else if ( oldestTweet ) {
+	oldestTweet['_prev_status_is_unknown'] = true;
+}
+
+const addedTweets  = tweets;
 const mergedTweets = addedTweets.concat(localTweets);
-mergedTweets.sort((a, b) => minus(b['id_str'], a['id_str']));
 
-printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.length, removedTweets.length, tweets.length);
-
-// TODO: 引き継ぎ用
-addTweetMediasData(localTweets);
+printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.length);
 
 // 
 addTweetMediasData(addedTweets);
 
-await writeLocalJsonp(targetName, 'favorites.js', { favorites: mergedTweets });
+await writeLocalJsonp(targetName, 'user-timeline.js', { userTimeline: mergedTweets });
 
 // 過去に取得したツイートのメディアダウンロードが失敗している場合に、再取得する用
 await downloadTweetMedias(targetName, localTweets);

@@ -7,8 +7,7 @@
 	// 
 	viewer.getUserHTML = user => {
 
-		const profileImageUrlOriginal = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
-		const localProfileImageFileName = viewer.getLocalProfileImageFileName(profileImageUrlOriginal);
+		const localProfileImageFileName = user['_local_profile_image_file_name'];
 
 		const description = viewer.replaceEntitiesToLinks(user['description'], user['entities']['description']);
 

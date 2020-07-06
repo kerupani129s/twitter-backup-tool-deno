@@ -92,4 +92,12 @@
 	 */
 	viewer.nl2br = str => str.replace(/\r\n/g, '<br>').replace(/\n|\r/g, '<br>');
 
+	/**
+	 * RFC3986 仕様の encodeURIComponent
+	 * 
+	 * メモ: ここでは RFC3986 仕様である必要はないが、混乱を避けるため仕様を統一
+	 */
+	viewer.percentEncode = str =>
+		encodeURIComponent(str).replace(/[!'()*]/g, char => '%' + char.charCodeAt().toString(16));
+
 })();

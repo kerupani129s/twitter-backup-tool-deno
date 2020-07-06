@@ -4,36 +4,32 @@
 
 	await Promise.all([
 			importInNoModule('./js/inc/util.js'),
-			importInNoModule('./js/inc/util-media.js'),
 			importInNoModule('./js/inc/util-user.js'),
+			importInNoModule('./js/inc/lazy-renderer.js'),
 			importInNoModule('./js/inc/renderer-users.js'),
-			importInNoModule('./jsonp/followers.js')
+			importInNoModule('./jsonp/followers.js').catch(() => {})
 	]);
 
 	const viewer = window.viewer;
-	const users = window.data.followers;
-	const removedUsers = window.data.removedFollowers;
+	const data = window.data;
+
+	const users = (data ? data.followers : null);
+	const removedUsers = (data ? data.removedFollowers : null);
 
 	// 
-	const infiniteScrollObserver = new IntersectionObserver(entries => {
-		entries.forEach(entry => {
-			if ( ! entry.isIntersecting ) return;
+	if ( ! users || ! removedUsers ) {
 
-			infiniteScrollObserver.unobserve(entry.target);
-			loadContent();
+		const contents = document.getElementById('contents');
 
-		});
-	});
+		contents.insertAdjacentHTML('beforeend', '<header class="content content-header">Followers</header>');
 
-	const loadContent = () => {
+		contents.insertAdjacentHTML('beforeend', '<pre><code>./deno-run.sh followers.js &lt;loginName&gt; &lt;@targetName&gt;</code></pre>');
 
-		const nextContent = contentsIterable.next();
+		return;
 
-		if ( ! nextContent.done )
-			infiniteScrollObserver.observe(nextContent.value);
+	}
 
-	};
-
+	// 
 	const contentsIterable = (function*() {
 
 		const contents = document.getElementById('contents');
@@ -57,6 +53,6 @@
 	})();
 
 	// 
-	loadContent();
+	viewer.lazyRenderContents(contentsIterable);
 
 })();

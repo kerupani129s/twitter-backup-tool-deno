@@ -2,8 +2,7 @@ import { download } from 'https://deno.land/x/download/mod.ts';
 import { copy, exists } from 'https://deno.land/std/fs/mod.ts';
 
 import { print } from './util-print.js';
-
-import  '../viewer/js/inc/util-media.js';
+import { getTweetMediaUrlLarge, getProfileImageUrlOriginal, getLocalTweetMediaFileName, getLocalProfileImageFileName } from './util-media.js';
 
 // 
 export const initDownloadsDirectory = async targetName => {
@@ -19,79 +18,17 @@ export const initDownloadsDirectory = async targetName => {
 	await Deno.mkdir('./downloads/' + targetName + '/jsonp/', { recursive: true });
 	await Deno.mkdir('./downloads/' + targetName + '/profile_image/', { recursive: true });
 	await Deno.mkdir('./downloads/' + targetName + '/media/', { recursive: true });
+	await Deno.mkdir('./downloads/' + targetName + '/json/', { recursive: true });
 
 };
 
 // 
-const downloadTweetMedia = async (targetName, tweet) => {
+export const readLocalJsonp = async (targetName, fileName) => {
 
-	if ( 'media' in tweet['entities'] ) {
-		// メモ: await を使用して直列実行したいため、forEach を使わない
-		for (const media of tweet['extended_entities']['media']) {
+	const path = './downloads/' + targetName + '/jsonp/' + fileName;
 
-			const mediaUrl = getMediaUrl(media);
-			const file = viewer.getLocalTweetMediaFileName(mediaUrl);
-			const dir = './downloads/' + targetName + '/media/';
-
-			if ( ! await exists(dir + file) ) {
-				try {
-					await download(mediaUrl, { file, dir });
-				} catch {
-					console.error('NetworkError: ' + mediaUrl);
-				}
-			}
-
-		}
-	}
-
-};
-
-const getMediaUrl = media => {
-
-	const type = media['type'];
-
-	if ( type === 'photo' ) {
-		return viewer.getImageUrlLarge(media['media_url_https']);
-	} else if ( type === 'video' || type === 'animated_gif' ) {
-		return viewer.getVideoUrlLargeMp4(media);
-	}
-
-	return '';
-
-};
-
-// 
-const downloadProfileImage = async (targetName, user) => {
-
-	const mediaUrl = viewer.getProfileImageUrlOriginal(user['profile_image_url_https']);
-
-	const file = viewer.getLocalProfileImageFileName(mediaUrl);
-	const dir = './downloads/' + targetName + '/profile_image/';
-
-	// TODO: 安定版では以下のコードを削除
-	//       ver.2.0-pre-alpha.1 -> ver.2.0-pre-alpha.2 バージョンアップ用
-	const fileOld = viewer.getLocalTweetMediaFileName(mediaUrl);
-	if ( await exists(dir + fileOld) )
-		await Deno.rename(dir + fileOld, dir + file);
-
-	// 
-	if ( ! await exists(dir + file) ) {
-		try {
-			await download(mediaUrl, { file, dir });
-		} catch {
-			console.error('NetworkError: ' + mediaUrl);
-		}
-	}
-
-};
-
-// 
-export const readLocalJsonp = async (targetName, path) => {
-
-	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
-
-	if ( await exists(pathWithDir) ) {
-		await import(Deno.cwd() + '/' + pathWithDir);
+	if ( await exists(path) ) {
+		await import(Deno.cwd() + '/' + path);
 		return window.data;
 	} else {
 		return;
@@ -99,9 +36,9 @@ export const readLocalJsonp = async (targetName, path) => {
 
 };
 
-export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
+export const writeLocalJsonp = async (targetName, fileName, obj, initObj = {}) => {
 
-	const pathWithDir = './downloads/' + targetName + '/jsonp/' + path;
+	const path = './downloads/' + targetName + '/jsonp/' + fileName;
 
 	const jsonp = 'window.data = window.data || {};\n' +
 		Object.entries(initObj).map(([key, value]) =>
@@ -109,9 +46,40 @@ export const writeLocalJsonp = async (targetName, path, obj, initObj = {}) => {
 		Object.entries(obj).map(([key, value]) =>
 				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
 
-	return Deno.writeTextFile(pathWithDir, jsonp);
+	return Deno.writeTextFile(path, jsonp);
 
 };
+
+// 
+export const readLocalJson = async (targetName, fileName) => {
+
+	const path = './downloads/' + targetName + '/json/' + fileName;
+
+	if ( await exists(path) ) {
+		return JSON.parse(await Deno.readTextFileSync(path));
+	} else {
+		return;
+	}
+
+};
+
+// 
+export const addTweetMediasData = tweets => tweets.forEach(tweet => {
+
+	addProfileImageData(tweet['user']);
+	addTweetMediaData(tweet);
+
+	if ( 'retweeted_status' in tweet ) {
+		const retweetedStatus = tweet['retweeted_status'];
+		addProfileImageData(retweetedStatus['user']);
+		addTweetMediaData(retweetedStatus);
+	}
+
+});
+
+export const addUserMediasData = users => users.forEach(user => {
+	addProfileImageData(user);
+});
 
 // 
 export const downloadTweetMedias = async (targetName, tweets) => {
@@ -127,6 +95,12 @@ export const downloadTweetMedias = async (targetName, tweets) => {
 
 		await downloadProfileImage(targetName, tweet['user']);
 		await downloadTweetMedia(targetName, tweet);
+
+		if ( 'retweeted_status' in tweet ) {
+			const retweetedStatus = tweet['retweeted_status'];
+			await downloadProfileImage(targetName, retweetedStatus['user']);
+			await downloadTweetMedia(targetName, retweetedStatus);
+		}
 
 		print('' + (i + 1) + ' / ' + tweets.length + '\r');
 
@@ -154,5 +128,86 @@ export const downloadUserMedias = async (targetName, users) => {
 	}
 
 	print('\n');
+
+};
+
+// 
+const addTweetMediaData = tweet => {
+
+	if ( 'media' in tweet['entities'] ) {
+		tweet['extended_entities']['media'].forEach(media => {
+
+			if ( media['_media_url_https_large'] || media['_local_media_file_name'] ) return;
+
+			const mediaUrl = getTweetMediaUrlLarge(media);
+			const fileName = getLocalTweetMediaFileName(mediaUrl);
+
+			media['_media_url_https_large'] = mediaUrl;
+			media['_local_media_file_name'] = fileName;
+
+		});
+	}
+
+};
+
+const addProfileImageData = user => {
+
+	if ( user['_profile_image_url_https_large'] || user['_local_profile_image_file_name'] ) return;
+
+	const mediaUrl = getProfileImageUrlOriginal(user['profile_image_url_https']);
+	const fileName = getLocalProfileImageFileName(mediaUrl);
+
+	user['_profile_image_url_https_large'] = mediaUrl;
+	user['_local_profile_image_file_name'] = fileName;
+
+};
+
+// 
+const downloadTweetMedia = async (targetName, tweet) => {
+
+	if ( 'media' in tweet['entities'] ) {
+		// メモ: await を使用して直列実行したいため、forEach を使わない
+		for (const media of tweet['extended_entities']['media']) {
+
+			const mediaUrl = media['_media_url_https_large'];
+			const fileName = media['_local_media_file_name'];
+
+			const dir = './downloads/' + targetName + '/media/';
+
+			if ( ! await exists(dir + fileName) ) {
+				try {
+					await download(mediaUrl, { file: fileName, dir });
+				} catch {
+					console.error('NetworkError: ' + mediaUrl);
+				}
+			}
+
+		}
+	}
+
+};
+
+// 
+const downloadProfileImage = async (targetName, user) => {
+
+	const mediaUrl = user['_profile_image_url_https_large'];
+	const fileName = user['_local_profile_image_file_name'];
+
+	const dir = './downloads/' + targetName + '/profile_image/';
+
+	// TODO: 安定版では以下のコードを削除
+	//       ver.2.0-pre-alpha.1 -> ver.2.0-pre-alpha.2 バージョンアップ用
+	const fileNameOld = getLocalTweetMediaFileName(mediaUrl);
+	if ( await exists(dir + fileNameOld) )
+		await Deno.rename(dir + fileNameOld, dir + fileName);
+
+	// 
+	if ( ! await exists(dir + fileName) ) {
+		try {
+			await download(mediaUrl, { file: fileName, dir });
+		} catch {
+			console.error('NetworkError: ' + mediaUrl);
+		}
+	}
 
 };

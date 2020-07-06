@@ -1,6 +1,6 @@
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
-import { initDownloadsDirectory, downloadUserMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
+import { initDownloadsDirectory, addUserMediasData, downloadUserMedias, readLocalJsonp, writeLocalJsonp } from './inc/downloader.js';
 import { printCountDiff } from './inc/util-print.js';
 
 // 
@@ -79,12 +79,24 @@ const localLists = (data ? data.lists.concat(data.removedLists) : []);
 
 const removedLists = localLists.filter(a => lists.every(b => a['id_str'] !== b['id_str']));
 
-// 
 printCountDiff('Lists', localLists.length, lists.length + removedLists.length - localLists.length, lists.length + removedLists.length, removedLists.length, lists.length);
+
+// 
+const removedListOwners = removedLists.map(list => list['user']);
+const listOwners = lists.map(list => list['user']);
+
+// TODO: 引き継ぎ用
+addUserMediasData(removedListOwners);
+
+// 
+addUserMediasData(listOwners);
 
 await writeLocalJsonp(targetName, 'lists.js', { lists, removedLists });
 
-// 
+// メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
+await downloadUserMedias(targetName, listOwners);
+
+// メモ: await を使用して直列実行したいため、forEach を使わない
 for (const list of lists) {
 
 	const listIdStr = list['id_str'];
@@ -99,8 +111,13 @@ for (const list of lists) {
 
 	const removedUsers = localUsers.filter(a => users.every(b => a['id_str'] !== b['id_str']));
 
-	// 
 	printCountDiff('Users', localUsers.length, users.length + removedUsers.length - localUsers.length, users.length + removedUsers.length, removedUsers.length, users.length);
+
+	// TODO: 引き継ぎ用
+	addUserMediasData(removedUsers);
+
+	// 
+	addUserMediasData(users);
 
 	await writeLocalJsonp(targetName, 'list.' + listIdStr + '.js', {
 		['listMembers[\'' + listIdStr + '\']']: users,
@@ -111,7 +128,6 @@ for (const list of lists) {
 	});
 
 	// メモ: ユーザーはプロフィールなどを変更されるので、メディアをすべて最新の状態に更新する
-	await downloadUserMedias(targetName, [list['user']]);
 	await downloadUserMedias(targetName, users);
 
 }
