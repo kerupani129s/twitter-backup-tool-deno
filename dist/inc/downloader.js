@@ -18,6 +18,7 @@ export const initDownloadsDirectory = async targetName => {
 	await Deno.mkdir('./downloads/' + targetName + '/jsonp/', { recursive: true });
 	await Deno.mkdir('./downloads/' + targetName + '/profile_image/', { recursive: true });
 	await Deno.mkdir('./downloads/' + targetName + '/media/', { recursive: true });
+	await Deno.mkdir('./downloads/' + targetName + '/json/', { recursive: true });
 
 };
 
@@ -46,6 +47,19 @@ export const writeLocalJsonp = async (targetName, fileName, obj, initObj = {}) =
 				'\nwindow.data.' + key + ' = ' + JSON.stringify(value, null, 4) + ';\n').join('');
 
 	return Deno.writeTextFile(path, jsonp);
+
+};
+
+// 
+export const readLocalJson = async (targetName, fileName) => {
+
+	const path = './downloads/' + targetName + '/json/' + fileName;
+
+	if ( await exists(path) ) {
+		return JSON.parse(await Deno.readTextFileSync(path));
+	} else {
+		return;
+	}
 
 };
 
