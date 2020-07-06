@@ -60,7 +60,7 @@ const localTweets = (data ? data.favorites : []);
 const addedTweets   = tweets.filter(a => localTweets.every(b => a['id_str'] !== b['id_str']));
 const removedTweets = localTweets.filter(a => tweets.every(b => a['id_str'] !== b['id_str']));
 
-const mergedTweets = localTweets.concat(addedTweets);
+const mergedTweets = addedTweets.concat(localTweets);
 mergedTweets.sort((a, b) => minus(b['id_str'], a['id_str']));
 
 printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.length, removedTweets.length, tweets.length);

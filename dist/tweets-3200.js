@@ -69,7 +69,7 @@ if ( localNewestTweetIdStr && oldestTweetIdStr && localNewestTweetIdStr === olde
 }
 
 const addedTweets  = tweets;
-const mergedTweets = tweets.concat(localTweets);
+const mergedTweets = addedTweets.concat(localTweets);
 
 printCountDiff('Tweets', localTweets.length, addedTweets.length, mergedTweets.length);
 
