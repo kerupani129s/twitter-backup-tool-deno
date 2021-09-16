@@ -6,7 +6,7 @@ const tweets = [];
 
 	const getTweets = () => {
 
-		target.querySelectorAll('article div[data-testid="tweet"]').forEach(node => {
+		target.querySelectorAll('article[data-testid="tweet"]').forEach(node => {
 
 			const urls = [...node.getElementsByTagName('a')].map(a => a.href);
 
