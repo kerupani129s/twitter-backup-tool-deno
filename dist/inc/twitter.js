@@ -124,7 +124,7 @@ export default class Twitter {
 	#getNonce() {
 		const array = new Uint8Array(32);
 		window.crypto.getRandomValues(array);
-		return hex.encodeToString(array);
+		return hex.encode(array);
 	}
 
 	#getTimestamp() {

@@ -1,5 +1,6 @@
 import { download } from 'https://deno.land/x/download/mod.ts';
-import { copy, exists } from 'https://deno.land/std/fs/mod.ts';
+import { copy } from "https://deno.land/std@0.115.1/fs/copy.ts";
+import { exists } from 'https://deno.land/std/fs/mod.ts';
 
 import { print } from './util-print.js';
 import { getTweetMediaUrlLarge, getProfileImageUrlOriginal, getLocalTweetMediaFileName, getLocalProfileImageFileName } from './util-media.js';
