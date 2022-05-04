@@ -47,5 +47,5 @@
 - とりあえず「いいね」ツイートを保存できるように。
 - 旧 PHP 版 [Twitter バックアップツール](https://github.com/kerupani129s/twitter-backup-tool)で php と wget で行っていた処理を全て js に統一・移植。
 - 旧 PHP 版 [Twitter バックアップツール](https://github.com/kerupani129s/twitter-backup-tool)で表示処理と保存処理が混合していたのを分離。
-- 旧 PHP 版 [Twitter バックアップツール](https://github.com/kerupani129s/twitter-backup-tool)では常に取得時のツイッターの情報をそのままダウンロードしていたのを、ver.2.0 で追加分だけ取得するよう変更。
+- 旧 PHP 版 [Twitter バックアップツール](https://github.com/kerupani129s/twitter-backup-tool)では常に取得時のツイッターの情報をそのままダウンロードしていたのを、本 Deno 版で追加分だけ取得するよう変更。
 	- 削除されたツイート・ユーザーはそのままローカルに残すように。
