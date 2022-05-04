@@ -159,4 +159,4 @@ dist/downloads/username/favorites.html
 
 [Changelog](CHANGELOG.md)
 
-※ pre-alpha バージョンは仕様変更が多いため、データの引継ぎは 1 バージョンずつ行って下さい。
+※ alpha バージョンは仕様変更が多いため、データの引継ぎは 1 バージョンずつ行って下さい。
