@@ -69,7 +69,7 @@ dist/downloads/username/json/bookmarks.json
 
 例：
 
-```
+```sh
 ./deno-run.sh favorites.js username username
 ```
 
