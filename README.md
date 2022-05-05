@@ -8,7 +8,7 @@ Twitter のユーザーやツイートのバックアップを手助けするツ
 
 bash と deno と Twitter API を使えることを前提としています。
 
-## 1. 本ツールで保存できるもの
+## 本ツールで保存できるもの
 
 現時点では以下のものに対応しています。今後追加予定です。
 
@@ -33,11 +33,18 @@ bash と deno と Twitter API を使えることを前提としています。
 		- 全て: `lists.js <ログイン名> <@対象ユーザー名>`
 		- 単体: `list.js <ログイン名> <対象リスト ID>`
 
-## 2. 使い方
+## 必要なもの
+
+- bash
+- deno
+- Twitter API
+- WEB ブラウザ (閲覧用、ブックマークレット実行用)
+
+## 使い方
 
 [使い方 | Twitter バックアップツール (Deno 版)](docs/manual/index.md)
 
-## 3. 注意事項
+## 注意事項
 
 - 全般
 	- 使用は自己責任でお願いします。
@@ -62,11 +69,11 @@ bash と deno と Twitter API を使えることを前提としています。
 	- WEB 版 Twitter では Content-Security-Policy が設定されているため、許可されていないドメインの外部 JavaScript を実行するブックマークレットは実行できません。
 
 
-## 4. ライセンス
+## ライセンス
 
 [MIT License](LICENSE)
 
-## 5. 変更履歴と今後の予定
+## 変更履歴と今後の予定
 
 [Changelog](CHANGELOG.md)
 

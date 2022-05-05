@@ -1,12 +1,5 @@
 # 使い方
 
-## 必要なもの
-
-- bash
-- deno
-- Twitter API
-- WEB ブラウザ (閲覧用、ブックマークレット実行用)
-
 ## Twitter API と連携
 
 Twitter API の取得と連携は各自でお願いします。
