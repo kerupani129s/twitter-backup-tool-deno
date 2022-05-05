@@ -1,6 +1,6 @@
 # 使い方
 
-## Twitter API と連携
+## 1. Twitter API と連携
 
 Twitter API の取得と連携は各自でお願いします。
 
@@ -29,7 +29,7 @@ API 用のキー 2 つとユーザー用のトークン 2 つを、本ツール�
 
 参考「[Twurl で連携アプリ認証し、アクセストークンとシークレットを取得 - Qiita](https://qiita.com/kerupani129/items/8a144d3c152b4f4708a9)」
 
-## ブックマークレット実行 (ブックマークまたはモーメントのみ)
+## 2. ブックマークレット実行 (ブックマークまたはモーメントのみ)
 
 ブックマークレット
 
@@ -51,7 +51,7 @@ API 用のキー 2 つとユーザー用のトークン 2 つを、本ツール�
 dist/downloads/username/json/bookmarks.json
 ```
 
-## deno で js を実行
+## 3. deno で js を実行
 
 `dist/` ディレクトリ内で `./deno-run.sh <js> <ログイン名> [<引数>]` を実行します。
 
@@ -66,7 +66,7 @@ dist/downloads/username/json/bookmarks.json
 ./deno-run.sh favorites.js username username
 ```
 
-## WEB ブラウザで閲覧
+## 4. WEB ブラウザで閲覧
 
 専用の html ファイルを開くと、保存したツイートが表示されます。
 
