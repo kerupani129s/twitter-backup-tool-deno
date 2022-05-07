@@ -98,14 +98,6 @@ dist/downloads/username/json/bookmarks.json
 
 専用の html ファイルを開くと保存したツイートが表示されます。
 
-動作環境:
-
-- Chrome
-- Firefox
-- Edge
-
-※ IE では表示できません。
-
 例:
 
 ```
