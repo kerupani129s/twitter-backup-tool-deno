@@ -96,7 +96,7 @@ dist/downloads/username/json/bookmarks.json
 
 ## 4. WEB ブラウザで閲覧
 
-専用の html ファイルを開くと保存したツイートが表示されます。
+専用の html ファイルを開くと保存したツイートやユーザーが表示されます。
 
 例:
 
