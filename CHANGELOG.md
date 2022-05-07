@@ -15,6 +15,10 @@
 ### Unfixed
 - ブックマークレットの取得抜けの改善 (可能なら) 。
 
+## [0.1.0-alpha.6] - 2022-05-07
+### Changed
+- ドキュメントを全体的に修整。
+
 ## [0.1.0-alpha.5] - 2021-12-05
 ### Fixed
 - 最新版の Deno に対応。
@@ -75,7 +79,8 @@
 	- 常に取得時のデータを全てダウンロードしていたのを、追加された差分だけ取得するよう変更。
 	- 削除されたツイート・ユーザーはそのままローカルに残すよう変更。
 
-[Unreleased]: https://github.com/kerupani129s/twitter-backup-tool-deno/compare/v0.1.0-alpha.5...HEAD
+[Unreleased]: https://github.com/kerupani129s/twitter-backup-tool-deno/compare/v0.1.0-alpha.6...HEAD
+[0.1.0-alpha.6]: https://github.com/kerupani129s/twitter-backup-tool-deno/compare/v0.1.0-alpha.5...v0.1.0-alpha.6
 [0.1.0-alpha.5]: https://github.com/kerupani129s/twitter-backup-tool-deno/compare/v0.1.0-alpha.4...v0.1.0-alpha.5
 [0.1.0-alpha.4]: https://github.com/kerupani129s/twitter-backup-tool-deno/compare/v0.1.0-alpha.3...v0.1.0-alpha.4
 [0.1.0-alpha.3]: https://github.com/kerupani129s/twitter-backup-tool-deno/compare/v0.1.0-alpha.2...v0.1.0-alpha.3
