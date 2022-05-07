@@ -1,0 +1,4 @@
+/docs/** -linguist-documentation
+/docs/manual/** linguist-documentation
+
+/dist/** -linguist-vendored

@@ -197,7 +197,7 @@ const downloadProfileImage = async (targetName, user) => {
 	const dir = './downloads/' + targetName + '/profile_image/';
 
 	// TODO: 安定版では以下のコードを削除
-	//       ver.2.0-pre-alpha.1 -> ver.2.0-pre-alpha.2 バージョンアップ用
+	//       v0.1.0-alpha.1 -> v0.1.0-alpha.2 バージョンアップ用
 	const fileNameOld = getLocalTweetMediaFileName(mediaUrl);
 	if ( await exists(dir + fileNameOld) )
 		await Deno.rename(dir + fileNameOld, dir + fileName);
