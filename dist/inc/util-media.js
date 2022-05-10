@@ -33,7 +33,7 @@ export const getProfileImageUrlOriginal = normal => normal.replace('_normal.', '
 // 
 export const getLocalTweetMediaFileName = mediaUrl => {
 
-	const {dir, name, ext, query} = parsePath(mediaUrl);
+	const {name, ext, query} = parsePath(mediaUrl);
 
 	const localFileNameRaw = name + (query !== '' ? ext + query + ext : ext);
 

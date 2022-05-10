@@ -1,5 +1,3 @@
-import { minus } from 'https://deno.land/x/math@v1.1.0/mod.ts';
-
 import Twitter from './inc/twitter.js';
 import Profile from './inc/profile.js';
 import { initDownloadsDirectory, addTweetMediasData, downloadTweetMedias, readLocalJsonp, writeLocalJsonp, readLocalJson } from './inc/downloader.js';
