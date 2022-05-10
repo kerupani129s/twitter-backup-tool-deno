@@ -40,7 +40,7 @@
 		// メモ: yield を使用したいため、forEach を使わない
 		for (const tweet of tweets) {
 			yield viewer.renderTweet(contents, tweet);
-		};
+		}
 
 	})();
 

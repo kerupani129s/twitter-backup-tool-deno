@@ -64,7 +64,7 @@
 			// メモ: yield を使用したいため、forEach を使わない
 			for (const user of users) {
 				yield viewer.renderUser(contents, user);
-			};
+			}
 
 			// 
 			yield viewer.renderUsersHeader(contents, 'Removed Members', removedUsers);
@@ -72,7 +72,7 @@
 			// メモ: yield を使用したいため、forEach を使わない
 			for (const user of removedUsers) {
 				yield viewer.renderUser(contents, user);
-			};
+			}
 
 		}
 
